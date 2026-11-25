@@ -5,6 +5,7 @@ import AuthGuard from "@/components/guards/AuthGuard";
 import Sidebar, { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import AddToListModal from "@/components/lists/AddToListModal";
+import BuyCreditsModal from "@/components/credits/BuyCreditsModal";
 
 const COLLAPSED_KEY = "kudozz.sidebarCollapsed";
 
@@ -61,6 +62,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <main className="px-4 pb-16 pt-6 sm:px-8">{children}</main>
         </div>
         <AddToListModal />
+        <BuyCreditsModal />
       </div>
     </AuthGuard>
   );

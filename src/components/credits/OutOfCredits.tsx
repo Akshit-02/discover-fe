@@ -22,8 +22,8 @@ const OutOfCredits = ({
   const text =
     description ??
     (expired
-      ? "Your free credits have expired. Top-ups are coming soon."
-      : `You have ${creditLabel(balance)} left, which isn't enough for this. Top-ups are coming soon.`);
+      ? "Your free credits have expired. Buy a credit pack to keep going."
+      : `You have ${creditLabel(balance)} left, which isn't enough for this. Buy a credit pack to keep going.`);
 
   return (
     <div

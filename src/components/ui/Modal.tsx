@@ -12,7 +12,7 @@ interface ModalProps {
   description?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
 }
 
 const Modal = ({ open, onClose, title, description, children, footer, size = "md" }: ModalProps) => {
@@ -45,7 +45,7 @@ const Modal = ({ open, onClose, title, description, children, footer, size = "md
       <div
         className={cn(
           "relative flex max-h-[90vh] w-full animate-fade-up flex-col overflow-hidden rounded-t-[28px] bg-white shadow-lift sm:rounded-3xl",
-          size === "sm" ? "sm:max-w-[420px]" : "sm:max-w-[520px]",
+          size === "sm" ? "sm:max-w-[420px]" : size === "lg" ? "sm:max-w-[760px]" : "sm:max-w-[520px]",
         )}
       >
         <div className="flex items-start justify-between gap-4 px-6 pb-2 pt-6">

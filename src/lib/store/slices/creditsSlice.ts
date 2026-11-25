@@ -12,6 +12,8 @@ interface CreditsState {
   costs: CreditCosts;
   loaded: boolean;
   loading: boolean;
+  /** Buy-credits modal, opened from anywhere in the dashboard. */
+  buyOpen: boolean;
 }
 
 const initialState: CreditsState = {
@@ -21,6 +23,7 @@ const initialState: CreditsState = {
   costs: DEFAULT_COSTS,
   loaded: false,
   loading: false,
+  buyOpen: false,
 };
 
 export const fetchCredits = createAsyncThunk("credits/fetchCredits", async (_: void, { rejectWithValue }) => {
@@ -45,6 +48,12 @@ const creditsSlice = createSlice({
   reducers: {
     setCredits: (state, action: PayloadAction<CreditBalance>) => apply(state, action.payload),
     resetCredits: () => initialState,
+    openBuyCredits: (state) => {
+      state.buyOpen = true;
+    },
+    closeBuyCredits: (state) => {
+      state.buyOpen = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCredits.pending, (state) => {
@@ -64,5 +73,5 @@ const creditsSlice = createSlice({
   },
 });
 
-export const { setCredits, resetCredits } = creditsSlice.actions;
+export const { setCredits, resetCredits, openBuyCredits, closeBuyCredits } = creditsSlice.actions;
 export default creditsSlice.reducer;
