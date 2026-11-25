@@ -7,7 +7,6 @@ import {
   ArrowLeft,
   ArrowsDownUp,
   Compass,
-  DownloadSimple,
   FolderSimple,
   MagnifyingGlass,
   PencilSimple,
@@ -32,7 +31,6 @@ import { cn } from "@/lib/utils/cn";
 import { searchLoaded, SORT_OPTIONS, SortKey, sortLoaded } from "@/lib/utils/creatorFilters";
 
 type ListSort = SortKey | "ADDED";
-import { downloadCreatorsCsv } from "@/lib/utils/csv";
 import { displayName, formatCompact, formatRelative } from "@/lib/utils/format";
 import DeleteListModal from "./DeleteListModal";
 import ListFormModal from "./ListFormModal";
@@ -158,14 +156,6 @@ const ListDetailView = ({ listId }: { listId: string }) => {
             <Button variant="secondary" leftIcon={<PencilSimple size={17} weight="bold" />} onClick={() => setEditOpen(true)}>
               Edit
             </Button>
-            <Button
-              variant="dark"
-              leftIcon={<DownloadSimple size={17} weight="bold" />}
-              disabled={!creators.length}
-              onClick={() => downloadCreatorsCsv(creators, `kudozz-${list.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.csv`)}
-            >
-              Export CSV
-            </Button>
           </div>
         )}
       </div>
@@ -263,7 +253,13 @@ const ListDetailView = ({ listId }: { listId: string }) => {
           ))}
         </div>
       ) : (
-        <CreatorTable creators={results} onOpen={setSelected} renderAction={renderRemove} />
+        <CreatorTable
+          creators={results}
+          onOpen={setSelected}
+          renderAction={renderRemove}
+          showNiches={false}
+          showLocation={false}
+        />
       )}
 
       {entry?.nextToken && (

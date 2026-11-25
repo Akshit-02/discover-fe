@@ -1,17 +1,9 @@
 "use client";
 
-import { nicheLabel } from "@/lib/constants/niches";
-import { ChatCircleDots, Eye, Heart, MapPin, UsersThree } from "@phosphor-icons/react";
+import { Eye, Heart, UsersThree } from "@phosphor-icons/react";
 import Badge from "@/components/ui/Badge";
 import { Creator } from "@/lib/models/creator";
-import {
-  compactList,
-  formatCompact,
-  formatPercent,
-  getTier,
-  locationLabel,
-  titleCase,
-} from "@/lib/utils/format";
+import { formatCompact, formatPercent, getTier } from "@/lib/utils/format";
 import CreatorIdentity from "./CreatorIdentity";
 import EngagementBadge from "./EngagementBadge";
 import AddToListButton from "@/components/lists/AddToListButton";
@@ -42,9 +34,7 @@ const Metric = ({
 );
 
 const CreatorCard = ({ creator, onOpen, index = 0, renderAction }: CreatorCardProps) => {
-  const niches = compactList(creator.niches);
   const tier = getTier(creator.followers);
-  const location = locationLabel(creator);
 
   return (
     <article
@@ -86,28 +76,13 @@ const CreatorCard = ({ creator, onOpen, index = 0, renderAction }: CreatorCardPr
         />
       </div>
 
-      <div className="mt-3 flex items-center gap-4 px-1 text-[12px] font-medium text-charcoal-400">
+      <div className="mt-3 flex items-center gap-4 px-1 pb-1 text-[12px] font-medium text-charcoal-400">
         <span className="flex items-center gap-1">
           <Heart size={13} weight="fill" className="text-coral-300" />
           {formatCompact(creator.avgLikes)} likes
         </span>
       </div>
 
-      <div className="mb-5 mt-4 flex min-h-[26px] flex-wrap gap-1.5">
-        {niches.slice(0, 3).map((niche) => (
-          <Badge key={niche} tone="outline">
-            {nicheLabel(niche)}
-          </Badge>
-        ))}
-        {niches.length > 3 && <Badge tone="neutral">+{niches.length - 3}</Badge>}
-      </div>
-
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-sand-100 pt-4">
-        <span className="flex min-w-0 items-center gap-1 text-[12.5px] font-medium text-charcoal-400">
-          <MapPin size={14} weight="duotone" className="shrink-0 text-coral" />
-          <span className="truncate">{location || "Location n/a"}</span>
-        </span>
-      </div>
     </article>
   );
 };
