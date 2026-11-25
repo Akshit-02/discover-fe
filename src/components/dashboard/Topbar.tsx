@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CaretDown, Folders, List, SignOut, UserCircle } from "@phosphor-icons/react";
+import { CaretDown, Folders, Lifebuoy, List, SignOut, UserCircle } from "@phosphor-icons/react";
 import Avatar from "@/components/ui/Avatar";
 import CreditsMenu from "@/components/credits/CreditsMenu";
 import { useSignOut } from "@/lib/hooks/useSignOut";
@@ -83,6 +83,15 @@ const Topbar = ({ onMenu }: { onMenu: () => void }) => {
                   >
                     <UserCircle size={18} weight="duotone" />
                     Account settings
+                  </Link>
+                  <Link
+                    href="/dashboard/support"
+                    role="menuitem"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-charcoal-600 transition-colors hover:bg-sand-50"
+                  >
+                    <Lifebuoy size={18} weight="duotone" />
+                    Help & support
                   </Link>
                   <button
                     role="menuitem"

@@ -11,6 +11,7 @@ import {
 } from "@/lib/models/creator";
 import { ProfileInput, User } from "@/lib/models/user";
 import { UserList, UserListInput } from "@/lib/models/list";
+import { SupportMessage, SupportMessageInput } from "@/lib/models/support";
 import {
   addCreatorToList,
   createUserList,
@@ -21,6 +22,8 @@ import {
   listCreators,
   listCreatorsInList,
   listMyLists,
+  listMySupportMessages,
+  submitSupportMessage,
   myCredits,
   openCreatorProfile,
   revealCreatorContact,
@@ -108,6 +111,12 @@ export const openCreatorProfileAPI = async (id: string) =>
 export const revealCreatorContactAPI = async (creatorId: string, field: ContactField) =>
   (await run<{ revealCreatorContact: ContactReveal }>(revealCreatorContact, { creatorId, field }))
     .revealCreatorContact;
+
+export const listMySupportMessagesAPI = async () =>
+  (await run<{ listMySupportMessages: SupportMessage[] }>(listMySupportMessages)).listMySupportMessages;
+
+export const submitSupportMessageAPI = async (input: SupportMessageInput) =>
+  (await run<{ submitSupportMessage: SupportMessage }>(submitSupportMessage, { input })).submitSupportMessage;
 
 export const updateMyProfileAPI = async (input: ProfileInput) =>
   (await run<{ updateMyProfile: User }>(updateMyProfile, { input })).updateMyProfile;

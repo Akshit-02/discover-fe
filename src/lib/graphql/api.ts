@@ -224,3 +224,29 @@ export const removeCreatorFromList = /* GraphQL */ `
     }
   }
 `;
+
+const SUPPORT_FIELDS = /* GraphQL */ `
+  id
+  type
+  subject
+  message
+  status
+  createdAt
+  updatedAt
+`;
+
+export const listMySupportMessages = /* GraphQL */ `
+  query ListMySupportMessages {
+    listMySupportMessages {
+      ${SUPPORT_FIELDS}
+    }
+  }
+`;
+
+export const submitSupportMessage = /* GraphQL */ `
+  mutation SubmitSupportMessage($input: SupportMessageInput!) {
+    submitSupportMessage(input: $input) {
+      ${SUPPORT_FIELDS}
+    }
+  }
+`;

@@ -1,4 +1,4 @@
-import { ChartPieSlice, Compass, Folders, Icon, Megaphone } from "@phosphor-icons/react";
+import { ChartPieSlice, Compass, Folders, Icon, Lifebuoy, Megaphone } from "@phosphor-icons/react";
 
 export interface NavItem {
   label: string;
@@ -20,6 +20,12 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/dashboard/lists",
     icon: Folders,
     description: "Your saved creator lists for campaigns and briefs.",
+  },
+  {
+    label: "Help & support",
+    href: "/dashboard/support",
+    icon: Lifebuoy,
+    description: "Contact the Kudozz team and send suggestions, feedback or queries.",
   },
 ];
 
