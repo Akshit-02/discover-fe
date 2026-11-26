@@ -34,23 +34,15 @@ import {
   UsersThree,
   X,
 } from "@phosphor-icons/react/dist/ssr";
-import Logo from "@/components/ui/Logo";
-import {
-  APP_NAME,
-  LEGAL_NAME,
-  PARENT_CONTACT_URL,
-  PARENT_SITE_LABEL,
-  PARENT_SITE_URL,
-  SOCIAL_LINKS,
-  SUPPORT_EMAIL,
-} from "@/config/brand";
+import { SUPPORT_EMAIL } from "@/config/brand";
 import { CREDIT_PACKS, formatInr, perCredit, savingsPercent } from "@/lib/constants/creditPacks";
 import { CREDIT_COSTS, FILTER_UNLOCK_HOURS, SIGNUP_CREDITS, SIGNUP_CREDIT_DAYS } from "@/lib/constants/credits";
 import { NICHES } from "@/lib/constants/niches";
 import { MAX_CREATORS_PER_LIST, MAX_LISTS_PER_USER } from "@/lib/models/list";
 import { cn } from "@/lib/utils/cn";
-import { FAQS, LOGIN_HREF, PRODUCT_DEFINITION, SIGNUP_HREF } from "./content";
+import { FAQS, PRODUCT_DEFINITION, SIGNUP_HREF } from "./content";
 import HeroPreview from "./HeroPreview";
+import LandingFooter from "./LandingFooter";
 import LandingNav from "./LandingNav";
 
 /* ---------------------------------------------------------------- primitives */
@@ -1118,54 +1110,7 @@ const LandingPage = () => (
       </section>
     </main>
 
-    {/* ------------------------------------------------------------ FOOTER */}
-    <footer className="border-t border-sand-200/80 bg-white">
-      <Container className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div className="max-w-[340px]">
-          <Logo />
-          <p className="mt-4 text-[14px] leading-relaxed text-charcoal-500">
-            {APP_NAME} helps brands and agencies in India search, evaluate and shortlist Instagram creators.
-          </p>
-        </div>
-        <nav aria-label="Product">
-          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Product</p>
-          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
-            <li><a href="#features" className="hover:text-coral-700">Features</a></li>
-            <li><a href="#how-it-works" className="hover:text-coral-700">How It Works</a></li>
-            <li><a href="#pricing" className="hover:text-coral-700">Pricing</a></li>
-            <li><a href="#faq" className="hover:text-coral-700">FAQs</a></li>
-          </ul>
-        </nav>
-        <nav aria-label="Account">
-          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Account</p>
-          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
-            <li><Link href={SIGNUP_HREF} data-cta="signup-footer" className="hover:text-coral-700">Sign up</Link></li>
-            <li><Link href={LOGIN_HREF} data-cta="login" className="hover:text-coral-700">Login</Link></li>
-          </ul>
-        </nav>
-        <nav aria-label="Company">
-          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Company</p>
-          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
-            <li><a href={PARENT_CONTACT_URL} className="hover:text-coral-700">Contact</a></li>
-            <li><a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-coral-700">{SUPPORT_EMAIL}</a></li>
-            <li><a href={PARENT_SITE_URL} className="hover:text-coral-700">{PARENT_SITE_LABEL}</a></li>
-            <li className="flex gap-3 pt-1">
-              <a href={SOCIAL_LINKS.instagram} rel="noopener" target="_blank" aria-label="Kudozz on Instagram" className="text-charcoal-400 hover:text-coral-700">
-                <InstagramLogo size={20} weight="duotone" aria-hidden />
-              </a>
-              <a href={SOCIAL_LINKS.linkedin} rel="noopener" target="_blank" aria-label="Kudozz on LinkedIn" className="text-[13px] font-semibold text-charcoal-400 hover:text-coral-700">
-                LinkedIn
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </Container>
-      <div className="border-t border-sand-200/80">
-        <Container className="py-6 text-[12.5px] text-charcoal-400">
-          © {new Date().getFullYear()} {LEGAL_NAME}. All rights reserved.
-        </Container>
-      </div>
-    </footer>
+    <LandingFooter />
   </div>
 );
 

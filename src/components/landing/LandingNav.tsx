@@ -7,12 +7,14 @@ import Logo from "@/components/ui/Logo";
 import { cn } from "@/lib/utils/cn";
 import { LOGIN_HREF, SIGNUP_HREF } from "./content";
 
+// Root-relative so the nav also works on /blog pages; on the homepage these still scroll in place.
 const LINKS = [
-  { href: "#top", label: "Home" },
-  { href: "#features", label: "Features" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQs" },
+  { href: "/#top", label: "Home" },
+  { href: "/#features", label: "Features" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#faq", label: "FAQs" },
+  { href: "/blog", label: "Blog" },
 ];
 
 const LandingNav = () => {
