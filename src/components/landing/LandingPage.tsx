@@ -1,725 +1,1169 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  Briefcase,
+  Buildings,
   ChartLineUp,
   Check,
   CheckCircle,
-  ClockCountdown,
   Coins,
-  CurrencyInr,
   EnvelopeSimple,
   Eye,
   Folders,
   GenderIntersex,
-  Handshake,
   Heart,
-  Infinity as InfinityIcon,
+  ImagesSquare,
+  InstagramLogo,
+  LinkSimple,
   MagnifyingGlass,
   MapPin,
+  Megaphone,
   Phone,
   Plus,
   Repeat,
+  Rocket,
   SealCheck,
   ShieldCheck,
+  ShoppingBag,
   SlidersHorizontal,
-  Sparkle,
+  Storefront,
+  Table,
   Tag,
-  Target,
   Translate,
   UserFocus,
   UsersThree,
   X,
 } from "@phosphor-icons/react/dist/ssr";
 import Logo from "@/components/ui/Logo";
-import { PARENT_SITE_LABEL, PARENT_SITE_URL, SUPPORT_EMAIL } from "@/config/brand";
+import {
+  APP_NAME,
+  LEGAL_NAME,
+  PARENT_CONTACT_URL,
+  PARENT_SITE_LABEL,
+  PARENT_SITE_URL,
+  SOCIAL_LINKS,
+  SUPPORT_EMAIL,
+} from "@/config/brand";
 import { CREDIT_PACKS, formatInr, perCredit, savingsPercent } from "@/lib/constants/creditPacks";
+import { CREDIT_COSTS, FILTER_UNLOCK_HOURS, SIGNUP_CREDITS, SIGNUP_CREDIT_DAYS } from "@/lib/constants/credits";
 import { NICHES } from "@/lib/constants/niches";
+import { MAX_CREATORS_PER_LIST, MAX_LISTS_PER_USER } from "@/lib/models/list";
 import { cn } from "@/lib/utils/cn";
+import { FAQS, LOGIN_HREF, PRODUCT_DEFINITION, SIGNUP_HREF } from "./content";
 import HeroPreview from "./HeroPreview";
 import LandingNav from "./LandingNav";
 
-const SIGNUP = "/signup";
-const FREE_CREDITS = 30;
+/* ---------------------------------------------------------------- primitives */
+
+const Container = ({ children, className }: { children: React.ReactNode; className?: string }) => (
+  <div className={cn("mx-auto w-full max-w-[1200px] px-4 sm:px-6", className)}>{children}</div>
+);
 
 const Eyebrow = ({ children, dark }: { children: React.ReactNode; dark?: boolean }) => (
-  <span
+  <p
     className={cn(
-      "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-bold uppercase tracking-[0.12em]",
-      dark ? "bg-white/10 text-tangerine" : "bg-coral-50 text-coral-700",
+      "text-[12px] font-bold uppercase tracking-[0.16em]",
+      dark ? "text-tangerine" : "text-coral-700",
     )}
   >
-    <Sparkle size={12} weight="fill" />
     {children}
-  </span>
+  </p>
 );
 
 const SectionHeading = ({
+  id,
   eyebrow,
   title,
-  subtitle,
+  intro,
   dark,
+  center,
+  className,
 }: {
+  id: string;
   eyebrow: string;
   title: React.ReactNode;
-  subtitle?: string;
+  intro?: React.ReactNode;
   dark?: boolean;
+  center?: boolean;
+  className?: string;
 }) => (
-  <div className="mx-auto max-w-[720px] text-center">
+  <div className={cn("max-w-[720px]", center && "mx-auto text-center", className)}>
     <Eyebrow dark={dark}>{eyebrow}</Eyebrow>
     <h2
+      id={id}
       className={cn(
-        "mt-4 font-display text-[34px] font-medium leading-[1.08] tracking-[-0.02em] sm:text-[46px]",
+        "mt-3 text-balance font-display text-[32px] font-medium leading-[1.08] tracking-[-0.02em] sm:text-[44px]",
         dark ? "text-white" : "text-charcoal",
       )}
     >
       {title}
     </h2>
-    {subtitle && (
-      <p className={cn("mt-4 text-[16px] leading-relaxed sm:text-[17px]", dark ? "text-white/60" : "text-charcoal-400")}>
-        {subtitle}
+    {intro && (
+      <p className={cn("mt-4 text-[16px] leading-relaxed sm:text-[17.5px]", dark ? "text-white/65" : "text-charcoal-500")}>
+        {intro}
       </p>
     )}
   </div>
 );
 
-const PrimaryCta = ({ children = `Start free with ${FREE_CREDITS} credits`, className }: { children?: React.ReactNode; className?: string }) => (
+const PrimaryCta = ({
+  children = "Start Discovering Creators",
+  cta = "signup",
+  className,
+}: {
+  children?: React.ReactNode;
+  cta?: string;
+  className?: string;
+}) => (
   <Link
-    href={SIGNUP}
+    href={SIGNUP_HREF}
+    data-cta={cta}
     className={cn(
-      "group inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-brand-gradient px-7 text-[16px] font-semibold text-white shadow-glow transition hover:brightness-[1.04] hover:shadow-[0_18px_40px_-12px_rgba(243,107,74,0.7)]",
+      "group inline-flex h-[52px] items-center justify-center gap-2 rounded-2xl bg-brand-gradient px-6 text-[15.5px] font-semibold text-white shadow-glow transition hover:brightness-[1.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 focus-visible:ring-offset-cream sm:h-14 sm:px-7 sm:text-[16px]",
       className,
     )}
   >
     {children}
-    <ArrowRight size={18} weight="bold" className="transition-transform group-hover:translate-x-0.5" />
+    <ArrowRight size={18} weight="bold" aria-hidden className="transition-transform group-hover:translate-x-0.5" />
   </Link>
 );
 
-/* ---------- data ---------- */
+const SecondaryCta = ({
+  href,
+  children,
+  dark,
+  cta,
+}: {
+  href: string;
+  children: React.ReactNode;
+  dark?: boolean;
+  cta?: string;
+}) => (
+  <a
+    href={href}
+    data-cta={cta}
+    className={cn(
+      "inline-flex h-[52px] items-center justify-center gap-2 rounded-2xl px-6 text-[15.5px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral sm:h-14 sm:px-7 sm:text-[16px]",
+      dark
+        ? "border border-white/15 text-white hover:bg-white/5"
+        : "border border-sand-200 bg-white text-charcoal shadow-soft hover:border-sand-300",
+    )}
+  >
+    {children}
+  </a>
+);
 
-const FILTERS = [
-  { icon: Tag, label: "Niche", note: "15 categories" },
-  { icon: UsersThree, label: "Follower range", note: "Presets or custom" },
-  { icon: ChartLineUp, label: "Engagement rate", note: "Set a minimum" },
-  { icon: Heart, label: "Avg. likes", note: "Proven traction" },
-  { icon: Eye, label: "Avg. views", note: "Reel reach" },
-  { icon: Repeat, label: "Posting frequency", note: "Active creators" },
-  { icon: MapPin, label: "State & city", note: "Go hyperlocal" },
-  { icon: Translate, label: "Language", note: "Speak their language" },
-  { icon: GenderIntersex, label: "Gender", note: "Match your audience" },
-  { icon: EnvelopeSimple, label: "Has email", note: "Ready to contact" },
-  { icon: Phone, label: "Has phone", note: "Ready to call" },
-  { icon: MagnifyingGlass, label: "Name / @username", note: "Find anyone fast" },
+const IconTile = ({ icon: Icon, dark }: { icon: React.ElementType; dark?: boolean }) => (
+  <span
+    className={cn(
+      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+      dark ? "bg-white/10 text-tangerine" : "bg-coral-50 text-coral",
+    )}
+    aria-hidden
+  >
+    <Icon size={22} weight="duotone" />
+  </span>
+);
+
+const CreditPill = ({ cost, label }: { cost: number; label?: string }) => (
+  <span className="inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-white px-2.5 py-1 text-[12.5px] font-bold text-charcoal ring-1 ring-sand-200">
+    <Coins size={13} weight="fill" className="text-tangerine" aria-hidden />
+    {cost} {label ?? (cost === 1 ? "credit" : "credits")}
+  </span>
+);
+
+/* ---------------------------------------------------------------- data */
+
+const VALUE_STRIP = [
+  { icon: MagnifyingGlass, title: "Smarter creator discovery", text: "Search a structured Instagram creator database instead of scrolling feeds." },
+  { icon: SlidersHorizontal, title: "Relevant creator filters", text: "Niche, followers, city, language, gender and engagement — combined." },
+  { icon: ChartLineUp, title: "Creator performance insights", text: "Engagement rate, average views and likes, posting frequency." },
+  { icon: Folders, title: "Organised creator shortlists", text: "Save creators to campaign lists you can revisit any time." },
 ];
 
-const BEFORE = [
-  "Scrolling hashtags and explore pages for hours",
-  "Guessing whether followers are real and engaged",
-  "Copy-pasting handles into messy spreadsheets",
-  "DMing creators and waiting days for a reply",
-  "Paying for expensive subscriptions you barely use",
+const PROBLEMS = [
+  {
+    title: "Hashtag scrolling that never ends",
+    text: "Searching #mumbaifashion or #punefoodie surfaces whoever posted last, not whoever fits your brief.",
+  },
+  {
+    title: "Opening profiles one at a time",
+    text: "Each profile means checking followers, recent reels and likes by hand — for hundreds of accounts.",
+  },
+  {
+    title: "Location and language are guesswork",
+    text: "Finding a Marathi-speaking creator in Nagpur or a Kannada food creator in Mysuru means reading bios and hoping.",
+  },
+  {
+    title: "Follower counts hide weak engagement",
+    text: "A large account with quiet comments can deliver less than a smaller creator whose audience actually responds.",
+  },
+  {
+    title: "Spreadsheets that go stale",
+    text: "Handles copied into sheets lose context, get duplicated across campaigns and are hard to share with your team.",
+  },
+  {
+    title: "Losing track of who you liked",
+    text: "Good creators found last month are forgotten by the next campaign because nothing kept them organised.",
+  },
 ];
 
-const AFTER = [
-  "Filter creators by niche, city, language and reach in seconds",
-  "See engagement rate and quality before you reach out",
-  "Save shortlists for every campaign in one place",
-  "Reveal the creator's email or phone and contact them directly",
-  "Pay only for what you unlock — no subscription",
+const BASIC_FILTERS = [
+  { icon: MagnifyingGlass, label: "Name or @username" },
+  { icon: UsersThree, label: "Follower range — presets or a custom min/max" },
+  { icon: ChartLineUp, label: "Sort by followers, engagement, avg. views or avg. likes" },
+];
+
+const ADVANCED_FILTERS = [
+  { icon: Tag, label: "Niche" },
+  { icon: MapPin, label: "State" },
+  { icon: Buildings, label: "City" },
+  { icon: Translate, label: "Language" },
+  { icon: GenderIntersex, label: "Gender" },
+  { icon: ChartLineUp, label: "Minimum engagement rate" },
+  { icon: Eye, label: "Minimum average views" },
+  { icon: Heart, label: "Minimum average likes" },
+  { icon: Repeat, label: "Posting frequency per month" },
+  { icon: EnvelopeSimple, label: "Has an email on file" },
+  { icon: Phone, label: "Has a phone number on file" },
+];
+
+const SEARCH_EXAMPLES = [
+  { niche: "Fashion & Lifestyle", where: "Mumbai", lang: null },
+  { niche: "Beauty & Skincare", where: "Delhi", lang: null },
+  { niche: "Food & Beverages", where: "Bengaluru", lang: null },
+  { niche: "Health & Fitness", where: "Pune", lang: null },
+  { niche: "Travel", where: "Jaipur", lang: null },
+  { niche: "Technology & Gadgets", where: "Hyderabad", lang: null },
+  { niche: "Any niche", where: "Gujarat", lang: "Gujarati" },
+  { niche: "Any niche", where: "Chennai", lang: "Tamil" },
+  { niche: "Any niche", where: "Maharashtra", lang: "Marathi" },
+];
+
+const METRICS = [
+  { icon: UsersThree, label: "Followers", text: "Audience size and the tier a creator falls into." },
+  { icon: ChartLineUp, label: "Engagement rate", text: "How much of that audience interacts, with a quality label." },
+  { icon: Eye, label: "Average views", text: "Typical reach of a creator's videos." },
+  { icon: Heart, label: "Average likes", text: "A steady signal of how content lands." },
+  { icon: Repeat, label: "Posting frequency", text: "Posts per month — is the account active?" },
+  { icon: ImagesSquare, label: "Total posts", text: "How established the content library is." },
+  { icon: SealCheck, label: "Verified status", text: "Shown as a badge on verified accounts." },
+  { icon: Translate, label: "Languages & location", text: "Where the creator is and the languages they use." },
+];
+
+const ENGAGEMENT_BANDS = [
+  { label: "Exceptional", range: "6% and above", width: "92%", color: "from-emerald-400 to-emerald-500" },
+  { label: "Strong", range: "3% – 6%", width: "66%", color: "from-coral to-tangerine" },
+  { label: "Average", range: "1% – 3%", width: "40%", color: "from-tangerine-300 to-tangerine" },
+  { label: "Low", range: "below 1%", width: "14%", color: "from-sand-300 to-sand-400" },
 ];
 
 const STEPS = [
   {
+    icon: Rocket,
+    title: "Create your account",
+    text: `Sign up with your email. You get ${SIGNUP_CREDITS} free credits, valid for ${SIGNUP_CREDIT_DAYS} days — no card needed.`,
+  },
+  {
     icon: SlidersHorizontal,
-    title: "Search & filter",
-    text: "Pick a niche, follower range, location and language. Add an engagement floor to keep only creators whose audience actually responds.",
+    title: "Search with relevant filters",
+    text: "Start free with name and follower range, then add niche, location, language and engagement filters.",
   },
   {
     icon: UserFocus,
-    title: "Review & shortlist",
-    text: "Open a creator's profile to see engagement, average likes and views, posting frequency and languages. Save the best fits to a campaign list.",
+    title: "Evaluate creator profiles",
+    text: "Open a profile to compare engagement, views, likes and posting frequency, and jump to their Instagram.",
   },
   {
-    icon: Handshake,
-    title: "Reveal & reach out",
-    text: "Reveal their email or phone in one click and pitch them directly — no agency, no middleman, no waiting on DMs.",
+    icon: Folders,
+    title: "Save and unlock contacts",
+    text: "Save the best fits to a list, and reveal an available email or phone number when you're ready to reach out.",
   },
 ];
 
-const RESULTS = [
+const AUDIENCES = [
   {
-    icon: ClockCountdown,
-    title: "Shortlist in minutes, not days",
-    text: "What used to take a week of scrolling and spreadsheets becomes a few focused searches.",
+    icon: ShoppingBag,
+    title: "D2C and ecommerce brands",
+    text: "Find creators who talk about your product category and reach the cities and languages your customers buy from.",
   },
   {
-    icon: Target,
-    title: "Partners who fit your brand",
-    text: "Match on niche, city, language and gender so every creator speaks to the customers you want.",
+    icon: Megaphone,
+    title: "Marketing teams",
+    text: "Replace ad-hoc scrolling with a repeatable process: shared search links, comparable metrics and saved lists.",
   },
   {
-    icon: ChartLineUp,
-    title: "Engagement over vanity numbers",
-    text: "Filter by engagement rate, likes and views to back creators whose audience actually listens.",
+    icon: Briefcase,
+    title: "Influencer marketing agencies",
+    text: "Research creators for several brands at once, with a separate list for each client or campaign.",
   },
   {
-    icon: CurrencyInr,
-    title: "Spend only on what you use",
-    text: "No subscriptions or lock-ins. Credits start from just a few rupees each, and purchased credits never expire.",
-  },
-];
-
-const COSTS = [
-  { icon: SlidersHorizontal, label: "Advanced filter search", cost: 2, note: "Same search free for 24h" },
-  { icon: UserFocus, label: "Open a creator profile", cost: 1, note: "Stays unlocked forever" },
-  { icon: EnvelopeSimple, label: "Reveal email", cost: 1, note: "Free if not available" },
-  { icon: Phone, label: "Reveal phone", cost: 2, note: "Free if not available" },
-];
-
-const FAQS = [
-  {
-    q: "Who is Kudozz Influencer Discovery for?",
-    a: "D2C brands, marketing teams, agencies and founders in India who want to run influencer campaigns with creators who genuinely fit their audience — without spending days hunting for them.",
+    icon: UsersThree,
+    title: "Social media agencies",
+    text: "Shortlist suitable creators for client briefs and pitches without starting every search from zero.",
   },
   {
-    q: "Which platform does it cover?",
-    a: "Instagram. Every creator links straight to their Instagram profile so you can check their content before you reach out.",
-  },
-  {
-    q: "Is it really free to start?",
-    a: `Yes. Every new account gets ${FREE_CREDITS} free credits, valid for 30 days. No credit card needed. Basic search by name and follower range is always free.`,
-  },
-  {
-    q: "How do credits work?",
-    a: "You only spend credits when you unlock something: 2 for an advanced filter search, 1 to open a creator profile, 1 to reveal an email and 2 to reveal a phone number. Anything you've unlocked stays unlocked, so you never pay twice for the same thing.",
-  },
-  {
-    q: "What if a creator doesn't have an email or phone?",
-    a: "Then you're not charged. Credits are only used when the contact is actually available.",
-  },
-  {
-    q: "Do purchased credits expire?",
-    a: "No. Purchased credits never expire. Only the free signup credits have a 30-day validity.",
-  },
-  {
-    q: "How can I pay?",
-    a: "Securely through Razorpay with UPI, debit or credit cards and netbanking. Credits are added to your account as soon as the payment completes.",
-  },
-  {
-    q: "I have a question that isn't answered here.",
-    a: `Write to us at ${SUPPORT_EMAIL} — a real person from the Kudozz team will get back to you.`,
+    icon: Storefront,
+    title: "Startups and small businesses",
+    text: "Explore creator collaborations on a small budget: free credits to start, small packs after, no subscription.",
   },
 ];
 
-/* ---------- page ---------- */
+const CREDIT_ROWS = [
+  { icon: MagnifyingGlass, label: "Basic search", note: "Name, @username and follower range", cost: 0 },
+  {
+    icon: SlidersHorizontal,
+    label: "Advanced filter search",
+    note: `Same filter set is free to re-run for ${FILTER_UNLOCK_HOURS} hours`,
+    cost: CREDIT_COSTS.advancedFilter,
+  },
+  { icon: UserFocus, label: "Open a creator profile", note: "Re-opening it later is free", cost: CREDIT_COSTS.openProfile },
+  { icon: EnvelopeSimple, label: "Reveal email", note: "Not charged if unavailable", cost: CREDIT_COSTS.revealEmail },
+  { icon: Phone, label: "Reveal phone", note: "Not charged if unavailable", cost: CREDIT_COSTS.revealPhone },
+];
+
+const visibleNiches = NICHES.filter((n) => n.isActive && n.slug !== "other");
+
+/* ---------------------------------------------------------------- page */
 
 const LandingPage = () => (
-  <div className="min-h-screen overflow-x-hidden bg-cream text-charcoal">
+  <div id="top" className="landing min-h-screen overflow-x-clip bg-cream text-charcoal">
+    <a
+      href="#main"
+      className="sr-only z-[60] rounded-lg bg-charcoal px-4 py-2 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    >
+      Skip to content
+    </a>
     <LandingNav />
 
-    {/* HERO */}
-    <section className="relative">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[640px] bg-[radial-gradient(ellipse_at_top,rgba(243,107,74,0.14),transparent_60%)]" />
-      <div className="relative mx-auto max-w-[1200px] px-4 pb-16 pt-12 sm:px-6 sm:pt-20">
-        <div className="mx-auto max-w-[860px] text-center">
-          <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-sand-200 bg-white/80 py-1.5 pl-1.5 pr-3.5 text-[13px] font-semibold text-charcoal-600 shadow-soft">
-            <span className="rounded-full bg-brand-gradient px-2 py-0.5 text-[11px] font-bold text-white">New</span>
-            Instagram influencer discovery for Indian brands
-          </span>
-          <h1 className="mt-7 animate-fade-up font-display text-[44px] font-medium leading-[1.02] tracking-[-0.03em] text-charcoal [animation-delay:60ms] sm:text-[68px] lg:text-[76px]">
-            Find creators your customers{" "}
-            <span className="whitespace-nowrap">
-              <span className="relative inline-block italic text-coral">
-                already trust
-                <svg viewBox="0 0 300 14" className="absolute -bottom-2 left-0 h-3 w-full text-tangerine" aria-hidden>
-                  <path d="M2 10 C 80 2, 220 2, 298 9" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                </svg>
-              </span>
-              .
-            </span>
-          </h1>
-          <p className="mx-auto mt-7 max-w-[640px] animate-fade-up text-[17px] leading-relaxed text-charcoal-500 [animation-delay:120ms] sm:text-[19px]">
-            Search Instagram creators by niche, city, language and real engagement. Build campaign shortlists in
-            minutes, reveal contact details in a click, and pay only for what you unlock.
-          </p>
-          <div className="mt-9 flex animate-fade-up flex-col items-center justify-center gap-3 [animation-delay:180ms] sm:flex-row">
-            <PrimaryCta />
-            <a
-              href="#how-it-works"
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-sand-200 bg-white px-7 text-[16px] font-semibold text-charcoal shadow-soft transition-colors hover:border-sand-300"
-            >
-              See how it works
-            </a>
-          </div>
-          <ul className="mt-6 flex animate-fade-up flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13.5px] font-medium text-charcoal-400 [animation-delay:240ms]">
-            {["No credit card required", `${FREE_CREDITS} free credits`, "No subscription"].map((t) => (
-              <li key={t} className="inline-flex items-center gap-1.5">
-                <CheckCircle size={16} weight="fill" className="text-emerald-500" />
-                {t}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-16 animate-fade-up [animation-delay:300ms]">
-          <HeroPreview />
-        </div>
-      </div>
-    </section>
-
-    {/* NICHE MARQUEE */}
-    <section className="border-y border-sand-200/80 bg-white/60 py-6">
-      <p className="mb-4 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-charcoal-300">
-        Creators across every niche your brand needs
-      </p>
-      <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex w-max animate-[marquee_40s_linear_infinite] gap-3">
-          {[...NICHES, ...NICHES].filter((n) => n.slug !== "other").map((n, i) => (
-            <span
-              key={`${n.slug}-${i}`}
-              className="whitespace-nowrap rounded-full border border-sand-200 bg-white px-4 py-2 text-[14px] font-semibold text-charcoal-600"
-            >
-              {n.label}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* PROBLEM → SOLUTION */}
-    <section className="mx-auto max-w-[1200px] px-4 py-24 sm:px-6">
-      <SectionHeading
-        eyebrow="Why Kudozz"
-        title={
-          <>
-            Stop hunting. Start <span className="italic text-coral">partnering.</span>
-          </>
-        }
-        subtitle="Finding the right creators shouldn't eat your whole week. Here's what changes when you switch."
-      />
-      <div className="mt-14 grid gap-5 lg:grid-cols-2">
-        <div className="rounded-[28px] border border-sand-200 bg-white p-7 sm:p-9">
-          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-300">The old way</p>
-          <ul className="mt-6 space-y-4">
-            {BEFORE.map((t) => (
-              <li key={t} className="flex items-start gap-3 text-[15.5px] text-charcoal-400">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sand-100 text-charcoal-300">
-                  <X size={13} weight="bold" />
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="relative overflow-hidden rounded-[28px] bg-charcoal p-7 text-white sm:p-9">
-          <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-coral/40 blur-[90px]" />
-          <p className="relative text-[13px] font-bold uppercase tracking-[0.12em] text-tangerine">With Kudozz</p>
-          <ul className="relative mt-6 space-y-4">
-            {AFTER.map((t) => (
-              <li key={t} className="flex items-start gap-3 text-[15.5px] text-white/85">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-white">
-                  <Check size={13} weight="bold" />
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    {/* FEATURES BENTO */}
-    <section id="features" className="scroll-mt-20 bg-white py-24">
-      <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-        <SectionHeading
-          eyebrow="Features"
-          title={
-            <>
-              Everything you need to find the <span className="italic text-coral">right fit</span>
-            </>
-          }
-          subtitle="Built for marketers who want results, not another tool to learn."
+    <main id="main">
+      {/* ------------------------------------------------------------ HERO */}
+      <section aria-labelledby="hero-title" className="relative">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-[620px] bg-[radial-gradient(ellipse_at_top,rgba(243,107,74,0.13),transparent_62%)]"
         />
-
-        <div className="mt-14 grid gap-5 md:grid-cols-6">
-          {/* Filters — large */}
-          <div className="rounded-[28px] border border-sand-200 bg-cream/60 p-7 md:col-span-4">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-50 text-coral">
-              <SlidersHorizontal size={24} weight="duotone" />
-            </span>
-            <h3 className="mt-5 text-[22px] font-bold tracking-tight">12 precision filters</h3>
-            <p className="mt-2 max-w-[520px] text-[15px] leading-relaxed text-charcoal-400">
-              Combine filters to zero in on exactly the creators you want. One advanced search costs the same no matter
-              how many filters you stack.
+        <Container className="relative pb-16 pt-10 sm:pb-20 sm:pt-16">
+          <div className="mx-auto max-w-[880px] text-center">
+            <p className="inline-flex items-center gap-2 rounded-full border border-sand-200 bg-white/80 px-3.5 py-1.5 text-[12.5px] font-semibold text-charcoal-600 shadow-soft">
+              <InstagramLogo size={15} weight="duotone" className="text-coral" aria-hidden />
+              Instagram creator search for Indian brands &amp; agencies
             </p>
-            <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {FILTERS.map(({ icon: Icon, label, note }) => (
-                <div key={label} className="flex items-center gap-2.5 rounded-2xl bg-white px-3 py-2.5 ring-1 ring-sand-200/70">
-                  <Icon size={18} weight="duotone" className="shrink-0 text-coral" />
-                  <div className="min-w-0">
-                    <p className="truncate text-[13px] font-bold">{label}</p>
-                    <p className="truncate text-[11.5px] text-charcoal-400">{note}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Engagement */}
-          <div className="relative overflow-hidden rounded-[28px] bg-charcoal p-7 text-white md:col-span-2">
-            <div className="pointer-events-none absolute -bottom-20 -right-16 h-60 w-60 rounded-full bg-coral/40 blur-[80px]" />
-            <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-tangerine">
-              <ChartLineUp size={24} weight="duotone" />
-            </span>
-            <h3 className="relative mt-5 text-[22px] font-bold tracking-tight">Engagement at a glance</h3>
-            <p className="relative mt-2 text-[15px] leading-relaxed text-white/60">
-              Every creator shows engagement rate with a clear quality rating, so you back audiences that respond.
-            </p>
-            <div className="relative mt-6 space-y-2.5">
-              {[
-                { label: "Exceptional", w: "92%", c: "from-emerald-400 to-emerald-500", v: "6%+" },
-                { label: "Strong", w: "64%", c: "from-coral to-tangerine", v: "3–6%" },
-                { label: "Average", w: "38%", c: "from-tangerine-300 to-tangerine", v: "1–3%" },
-              ].map((r) => (
-                <div key={r.label}>
-                  <div className="mb-1 flex justify-between text-[12px] font-semibold">
-                    <span>{r.label}</span>
-                    <span className="text-white/50">{r.v}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-white/10">
-                    <div className={`h-full rounded-full bg-gradient-to-r ${r.c}`} style={{ width: r.w }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Contacts */}
-          <div className="rounded-[28px] border border-sand-200 bg-cream/60 p-7 md:col-span-2">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-50 text-coral">
-              <EnvelopeSimple size={24} weight="duotone" />
-            </span>
-            <h3 className="mt-5 text-[22px] font-bold tracking-tight">Direct contact, on demand</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-charcoal-400">
-              Reveal a creator&apos;s email or phone number in one click and reach them directly. If it&apos;s not
-              available, you&apos;re not charged.
-            </p>
-            <div className="mt-6 space-y-2">
-              <div className="flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 ring-sand-200/70">
-                <EnvelopeSimple size={18} weight="duotone" className="text-coral" />
-                <span className="text-[13.5px] font-semibold">meera@movesstudio.in</span>
-                <CheckCircle size={16} weight="fill" className="ml-auto text-emerald-500" />
-              </div>
-              <div className="flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 ring-sand-200/70">
-                <Phone size={18} weight="duotone" className="text-charcoal-300" />
-                <span className="text-[13.5px] tracking-widest text-charcoal-300">••••••••••</span>
-                <span className="ml-auto rounded-lg bg-charcoal px-2 py-1 text-[11px] font-semibold text-white">Reveal</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Lists */}
-          <div className="rounded-[28px] border border-sand-200 bg-cream/60 p-7 md:col-span-2">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-50 text-coral">
-              <Folders size={24} weight="duotone" />
-            </span>
-            <h3 className="mt-5 text-[22px] font-bold tracking-tight">Campaign shortlists</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-charcoal-400">
-              Save creators into lists for each campaign, brief or client. Up to 100 lists with 50 creators each.
-            </p>
-            <div className="mt-6 space-y-2">
-              {[
-                { n: "Diwali festive drop", c: 18 },
-                { n: "Mumbai café launch", c: 9 },
-                { n: "Fitness reels · Q1", c: 24 },
-              ].map((l) => (
-                <div key={l.n} className="flex items-center gap-3 rounded-2xl bg-white px-3 py-2.5 ring-1 ring-sand-200/70">
-                  <Folders size={17} weight="fill" className="text-tangerine" />
-                  <span className="truncate text-[13.5px] font-semibold">{l.n}</span>
-                  <span className="ml-auto rounded-full bg-coral-50 px-2 py-0.5 text-[11px] font-bold text-coral-700">{l.c}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Profiles */}
-          <div className="rounded-[28px] border border-sand-200 bg-cream/60 p-7 md:col-span-2">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-coral-50 text-coral">
-              <UserFocus size={24} weight="duotone" />
-            </span>
-            <h3 className="mt-5 text-[22px] font-bold tracking-tight">Rich creator profiles</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-charcoal-400">
-              Followers, posts, average likes and views, posting frequency, languages, niches and location — all in one
-              view, one click from their Instagram.
-            </p>
-            <div className="mt-6 grid grid-cols-2 gap-2">
-              {[
-                ["Followers", "9.7K"],
-                ["Avg. likes", "640"],
-                ["Avg. views", "4.2K"],
-                ["Engagement", "6.9%"],
-              ].map(([k, v]) => (
-                <div key={k} className="rounded-2xl bg-white p-3 ring-1 ring-sand-200/70">
-                  <p className="text-[11.5px] text-charcoal-400">{k}</p>
-                  <p className="text-[17px] font-bold">{v}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    {/* HOW IT WORKS */}
-    <section id="how-it-works" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 py-24 sm:px-6">
-      <SectionHeading
-        eyebrow="How it works"
-        title={
-          <>
-            From idea to outreach in <span className="italic text-coral">three steps</span>
-          </>
-        }
-      />
-      <div className="relative mt-14 grid gap-5 md:grid-cols-3">
-        <div className="pointer-events-none absolute left-[16%] right-[16%] top-[52px] hidden border-t-2 border-dashed border-sand-300 md:block" />
-        {STEPS.map(({ icon: Icon, title, text }, i) => (
-          <div key={title} className="relative rounded-[28px] border border-sand-200 bg-white p-7 text-center shadow-soft">
-            <span className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-gradient text-white shadow-glow">
-              <Icon size={26} weight="duotone" />
-              <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-charcoal text-[11px] font-bold text-white ring-4 ring-white">
-                {i + 1}
-              </span>
-            </span>
-            <h3 className="mt-6 text-[20px] font-bold tracking-tight">{title}</h3>
-            <p className="mt-2 text-[15px] leading-relaxed text-charcoal-400">{text}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    {/* RESULTS */}
-    <section className="relative overflow-hidden bg-charcoal py-24 text-white">
-      <div className="pointer-events-none absolute -left-40 top-0 h-[480px] w-[480px] rounded-full bg-coral/30 blur-[140px]" />
-      <div className="pointer-events-none absolute -right-40 bottom-0 h-[420px] w-[420px] rounded-full bg-tangerine/20 blur-[140px]" />
-      <div className="relative mx-auto max-w-[1200px] px-4 sm:px-6">
-        <SectionHeading
-          dark
-          eyebrow="The results"
-          title={
-            <>
-              Better creators. Less time. <span className="italic text-tangerine">Lower spend.</span>
-            </>
-          }
-          subtitle="Kudozz turns influencer discovery from a time sink into your team's unfair advantage."
-        />
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {RESULTS.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-[28px] border border-white/10 bg-white/[0.04] p-7 backdrop-blur">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-tangerine">
-                <Icon size={24} weight="duotone" />
-              </span>
-              <h3 className="mt-5 text-[19px] font-bold tracking-tight">{title}</h3>
-              <p className="mt-2 text-[14.5px] leading-relaxed text-white/60">{text}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-12 flex justify-center">
-          <PrimaryCta>Find your first creators free</PrimaryCta>
-        </div>
-      </div>
-    </section>
-
-    {/* PRICING */}
-    <section id="pricing" className="mx-auto max-w-[1200px] scroll-mt-20 px-4 py-24 sm:px-6">
-      <SectionHeading
-        eyebrow="Pricing"
-        title={
-          <>
-            Pay for results, <span className="italic text-coral">not seats</span>
-          </>
-        }
-        subtitle={`Start with ${FREE_CREDITS} free credits. When you need more, top up with a pack — no subscription, and purchased credits never expire.`}
-      />
-
-      <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {CREDIT_PACKS.map((pack) => {
-          const savings = savingsPercent(pack);
-          return (
-            <div
-              key={pack.id}
-              className={cn(
-                "relative flex flex-col rounded-[28px] border bg-white p-7",
-                pack.popular ? "border-coral shadow-[0_0_0_4px_rgba(243,107,74,0.12),0_30px_60px_-30px_rgba(243,107,74,0.5)]" : "border-sand-200",
-              )}
+            <h1
+              id="hero-title"
+              className="mt-6 text-balance font-display text-[40px] font-medium leading-[1.04] tracking-[-0.03em] text-charcoal sm:text-[62px] lg:text-[72px]"
             >
-              {pack.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-brand-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow-glow">
-                  Most popular
-                </span>
-              )}
-              <p className="text-[15px] font-bold">{pack.name}</p>
-              <p className="text-[13px] text-charcoal-400">{pack.tagline}</p>
-              <p className="mt-6 text-[40px] font-bold leading-none tracking-tight">{formatInr(pack.priceInr)}</p>
-              <p className="mt-2 text-[14px] font-semibold text-charcoal-600">
-                {pack.credits.toLocaleString("en-IN")} credits
-              </p>
-              <p className="mt-1 flex items-center gap-2 text-[12.5px] text-charcoal-400">
-                {formatInr(perCredit(pack), 2)} / credit
-                {savings > 0 && (
-                  <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[11px] font-bold text-emerald-700">
-                    Save {savings}%
-                  </span>
-                )}
-              </p>
-              <ul className="mb-7 mt-6 space-y-2 text-[13.5px] text-charcoal-500">
-                <li className="flex items-center gap-2">
-                  <Check size={15} weight="bold" className="text-coral" />
-                  Up to {pack.credits.toLocaleString("en-IN")} profile unlocks
+              India&apos;s No.{"\u00A0"}1 <span className="italic text-coral">Influencer Discovery</span> Tool
+            </h1>
+            <p className="mx-auto mt-6 max-w-[660px] text-[17px] leading-relaxed text-charcoal-500 sm:text-[19px]">
+              Discover the right Instagram creators for your brand. Search influencers by niche, followers, city,
+              language and engagement, compare their metrics, and build a creator shortlist — without hours of manual
+              research.
+            </p>
+            <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+              <PrimaryCta cta="signup-hero" />
+              <SecondaryCta href="#features" cta="explore-features">
+                Explore Features
+              </SecondaryCta>
+            </div>
+            <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13.5px] font-medium text-charcoal-500">
+              {[`${SIGNUP_CREDITS} free credits on signup`, "No card required", "No subscription"].map((t) => (
+                <li key={t} className="inline-flex items-center gap-1.5">
+                  <CheckCircle size={16} weight="fill" className="text-emerald-600" aria-hidden />
+                  {t}
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check size={15} weight="bold" className="text-coral" />
-                  All 12 filters included
-                </li>
-                <li className="flex items-center gap-2">
-                  <InfinityIcon size={15} weight="bold" className="text-coral" />
-                  Credits never expire
-                </li>
-              </ul>
-              <Link
-                href={SIGNUP}
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-12 sm:mt-16">
+            <HeroPreview />
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ VALUE STRIP */}
+      <section aria-label="Key benefits" className="border-y border-sand-200/80 bg-white">
+        <Container>
+          <ul className="grid divide-sand-200/80 sm:grid-cols-2 sm:divide-x lg:grid-cols-4">
+            {VALUE_STRIP.map(({ icon: Icon, title, text }, i) => (
+              <li
+                key={title}
                 className={cn(
-                  "mt-auto inline-flex h-12 items-center justify-center rounded-2xl text-[14.5px] font-semibold transition",
-                  pack.popular
-                    ? "bg-brand-gradient text-white shadow-glow hover:brightness-[1.04]"
-                    : "border border-sand-200 bg-white text-charcoal hover:border-sand-300",
+                  "flex gap-3.5 py-6 sm:px-6",
+                  i > 0 && "border-t border-sand-200/80 sm:border-t-0",
+                  i === 2 && "sm:border-t lg:border-t-0",
+                  i === 3 && "sm:border-t lg:border-t-0",
+                  i % 2 === 0 && "sm:pl-0 lg:pl-6",
+                  i === 0 && "lg:pl-0",
                 )}
               >
-                Get started
-              </Link>
-            </div>
-          );
-        })}
-      </div>
+                <Icon size={24} weight="duotone" className="mt-0.5 shrink-0 text-coral" aria-hidden />
+                <div>
+                  <h3 className="text-[15px] font-bold tracking-tight">{title}</h3>
+                  <p className="mt-1 text-[13.5px] leading-relaxed text-charcoal-400">{text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
 
-      <div className="mt-8 grid gap-6 rounded-[28px] border border-sand-200 bg-white p-7 lg:grid-cols-[1fr_1.4fr] lg:items-center">
-        <div>
-          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-tangerine-50 text-tangerine">
-            <Coins size={24} weight="fill" />
-          </span>
-          <h3 className="mt-4 text-[22px] font-bold tracking-tight">Simple, fair credit costs</h3>
-          <p className="mt-2 text-[15px] leading-relaxed text-charcoal-400">
-            Searching by name and follower range is always free. You only spend credits when you unlock something — and
-            never twice for the same thing.
-          </p>
-        </div>
-        <div className="grid gap-2.5 sm:grid-cols-2">
-          {COSTS.map(({ icon: Icon, label, cost, note }) => (
-            <div key={label} className="flex items-center gap-3 rounded-2xl bg-cream/70 p-3.5">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-coral ring-1 ring-sand-200">
-                <Icon size={19} weight="duotone" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[13.5px] font-bold">{label}</p>
-                <p className="text-[12px] text-charcoal-400">{note}</p>
+      {/* ------------------------------------------------------------ DEFINITION (AEO) */}
+      <section aria-labelledby="what-is" className="py-20 sm:py-24">
+        <Container className="grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+          <div className="reveal">
+            <SectionHeading
+              id="what-is"
+              eyebrow="In short"
+              title={
+                <>
+                  What is <span className="italic text-coral">Kudozz Influencer Discovery</span>?
+                </>
+              }
+            />
+            <p className="mt-5 text-[17px] leading-relaxed text-charcoal-600 sm:text-[18px]">{PRODUCT_DEFINITION}</p>
+            <p className="mt-4 text-[15.5px] leading-relaxed text-charcoal-500">
+              It&apos;s built by Kudozz, an Indian influencer and creator marketing company, for the research step of a
+              campaign: finding and evaluating creators before you reach out.
+            </p>
+          </div>
+          <dl className="reveal grid grid-cols-2 gap-3">
+            {[
+              { k: "Platform covered", v: "Instagram" },
+              { k: "Built for", v: "Brands & agencies in India" },
+              { k: "Pricing", v: "Pay-as-you-go credits" },
+              { k: "To start", v: `${SIGNUP_CREDITS} free credits` },
+            ].map(({ k, v }) => (
+              <div key={k} className="rounded-2xl border border-sand-200 bg-white p-5 shadow-soft">
+                <dt className="text-[12px] font-bold uppercase tracking-[0.12em] text-charcoal-400">{k}</dt>
+                <dd className="mt-2 text-[18px] font-bold leading-snug tracking-tight sm:text-[20px]">{v}</dd>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[13px] font-bold ring-1 ring-sand-200">
-                <Coins size={13} weight="fill" className="text-tangerine" />
-                {cost}
+            ))}
+          </dl>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ PROBLEM */}
+      <section aria-labelledby="problem" className="bg-charcoal py-20 text-white sm:py-28">
+        <Container>
+          <SectionHeading
+            id="problem"
+            dark
+            eyebrow="The problem"
+            title="Finding the Right Influencers Shouldn't Take Hours of Manual Research"
+            intro="Most teams in India still discover creators by hand. It works for five profiles. It breaks down at fifty."
+          />
+          <ul className="mt-12 grid gap-px overflow-hidden rounded-3xl bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+            {PROBLEMS.map((p) => (
+              <li key={p.title} className="reveal bg-charcoal p-6 sm:p-7">
+                <X size={18} weight="bold" className="text-coral-300" aria-hidden />
+                <h3 className="mt-4 text-[17px] font-bold tracking-tight">{p.title}</h3>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-white/60">{p.text}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+            <p className="max-w-[720px] text-[16px] leading-relaxed text-white/80 sm:text-[17px]">
+              <strong className="font-semibold text-white">A discovery platform turns this into a search.</strong> You
+              describe the creator you need — niche, size, place, language, engagement — and compare a filtered list
+              side by side, with the shortlist saved where your team can find it.
+            </p>
+            <PrimaryCta cta="signup-problem" className="shrink-0">
+              Try it free
+            </PrimaryCta>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ FEATURES / SEARCH */}
+      <section id="features" aria-labelledby="features-title" className="scroll-mt-20 py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            id="features-title"
+            eyebrow="Influencer search"
+            title="Discover Influencers That Match Your Brand"
+            intro="Kudozz is an influencer search tool built around the questions brands actually ask: what do they post about, how big is their audience, where are they, what language do they use, and does their audience engage?"
+          />
+
+          <div className="mt-12 grid gap-5 lg:grid-cols-[1fr_1.5fr]">
+            <div className="reveal flex flex-col rounded-[28px] border border-sand-200 bg-white p-6 sm:p-8">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-[20px] font-bold tracking-tight">Basic search</h3>
+                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[12px] font-bold text-emerald-700">Free</span>
+              </div>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-charcoal-500">
+                Look up a creator you already know or browse by audience size. Basic search never uses credits.
+              </p>
+              <ul className="mt-6 space-y-2.5">
+                {BASIC_FILTERS.map(({ icon: Icon, label }) => (
+                  <li key={label} className="flex items-start gap-3 rounded-2xl bg-cream/70 px-4 py-3 text-[14px] font-semibold">
+                    <Icon size={18} weight="duotone" className="mt-px shrink-0 text-coral" aria-hidden />
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="reveal rounded-[28px] bg-charcoal p-6 text-white sm:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="text-[20px] font-bold tracking-tight">Advanced filters</h3>
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[12px] font-bold text-tangerine">
+                  <Coins size={13} weight="fill" aria-hidden />
+                  {CREDIT_COSTS.advancedFilter} credits per filter set
+                </span>
+              </div>
+              <p className="mt-2 text-[14.5px] leading-relaxed text-white/60">
+                Stack as many as you need — one search costs the same however many filters you combine, and re-running
+                the same set within {FILTER_UNLOCK_HOURS} hours is free.
+              </p>
+              <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+                {ADVANCED_FILTERS.map(({ icon: Icon, label }) => (
+                  <li
+                    key={label}
+                    className="flex items-center gap-2.5 rounded-xl bg-white/[0.06] px-3.5 py-2.5 text-[13.5px] font-semibold text-white/90"
+                  >
+                    <Icon size={17} weight="duotone" className="shrink-0 text-tangerine" aria-hidden />
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-5 md:grid-cols-3">
+            {[
+              {
+                icon: LinkSimple,
+                title: "Shareable searches",
+                text: "Your filters live in the page URL, so you can bookmark a search or send it to a colleague.",
+              },
+              {
+                icon: InstagramLogo,
+                title: "One click to Instagram",
+                text: "Every creator links to their Instagram profile, so you can review recent content yourself.",
+              },
+              {
+                icon: Table,
+                title: "Compare side by side",
+                text: "Results show followers, engagement and more in one table, sortable by the metric you care about.",
+              },
+            ].map(({ icon, title, text }) => (
+              <div key={title} className="reveal flex gap-4 rounded-[24px] border border-sand-200 bg-white p-6">
+                <IconTile icon={icon} />
+                <div>
+                  <h3 className="text-[16px] font-bold tracking-tight">{title}</h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-charcoal-500">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ MICRO & NANO */}
+      <section aria-labelledby="micro-nano" className="bg-white py-20 sm:py-28">
+        <Container className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <SectionHeading
+              id="micro-nano"
+              eyebrow="Micro & nano influencers"
+              title="Find Micro and Nano Influencers Across India"
+              intro="Smaller creators often have focused, local communities — a home baker followed by her neighbourhood, a fitness coach whose followers train in the same city. For many brands, that relevance matters as much as reach."
+            />
+            <ul className="mt-8 space-y-4">
+              {[
+                ["Niche relevance", "A creator who only posts about skincare speaks to people who care about skincare."],
+                ["Regional audiences", "Creators in Tier 2 and Tier 3 cities reach customers metro-focused campaigns miss."],
+                ["Local language", "Content in Marathi, Tamil, Bengali or Gujarati can feel native rather than translated."],
+                ["Brand alignment", "Smaller creators are often more selective and closer to their audience."],
+              ].map(([k, v]) => (
+                <li key={k} className="flex gap-3">
+                  <Check size={18} weight="bold" className="mt-1 shrink-0 text-coral" aria-hidden />
+                  <p className="text-[15.5px] leading-relaxed text-charcoal-500">
+                    <strong className="font-semibold text-charcoal">{k}.</strong> {v}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 rounded-2xl border border-sand-200 bg-cream/70 p-4 text-[14px] leading-relaxed text-charcoal-500">
+              Smaller isn&apos;t automatically better. A national product launch may need large creators for reach;
+              a regional store opening may do better with twenty local voices. Pick the tier that fits the campaign
+              objective — Kudozz lets you search any of them.
+            </p>
+          </div>
+
+          <div className="reveal rounded-[28px] border border-sand-200 bg-cream/60 p-6 sm:p-8">
+            <h3 className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Creator tiers by followers</h3>
+            <ol className="mt-5 space-y-2.5">
+              {[
+                { tier: "Nano", range: "Under 10K", w: "18%", hi: true },
+                { tier: "Micro", range: "10K – 100K", w: "42%", hi: true },
+                { tier: "Mid-tier", range: "100K – 500K", w: "64%" },
+                { tier: "Macro", range: "500K – 1M", w: "82%" },
+                { tier: "Mega", range: "1M+", w: "100%" },
+              ].map((t) => (
+                <li key={t.tier} className="rounded-2xl bg-white p-4 ring-1 ring-sand-200/70">
+                  <div className="flex items-center justify-between text-[14px]">
+                    <span className="font-bold">{t.tier}</span>
+                    <span className="font-semibold text-charcoal-400">{t.range}</span>
+                  </div>
+                  <div className="mt-2.5 h-2 rounded-full bg-sand-100">
+                    <div
+                      className={cn("h-full rounded-full", t.hi ? "bg-brand-gradient" : "bg-charcoal-200")}
+                      style={{ width: t.w }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-4 text-[12.5px] leading-relaxed text-charcoal-400">
+              Tier labels are how Kudozz groups creators. Use follower presets or type an exact range.
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ NICHE / LOCATION / LANGUAGE */}
+      <section aria-labelledby="niche-location" className="py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            id="niche-location"
+            eyebrow="Niche, location & language"
+            title="Find Influencers by Niche, Location and Language"
+            intro="India isn't one market. Combine niche, state, city and language filters to describe the creator your campaign needs — including creators outside the big metros."
+          />
+          <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SEARCH_EXAMPLES.map((ex) => (
+              <li
+                key={`${ex.niche}-${ex.where}`}
+                className="reveal flex flex-col gap-3 rounded-[22px] border border-sand-200 bg-white p-5 transition-shadow hover:shadow-soft"
+              >
+                <p className="text-[15.5px] font-bold tracking-tight">
+                  {ex.lang
+                    ? `${ex.lang}-speaking creators in ${ex.where}`
+                    : `${ex.niche.split(" & ")[0]} creators in ${ex.where}`}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {ex.niche !== "Any niche" && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-coral-50 px-2.5 py-1 text-[11.5px] font-semibold text-coral-700">
+                      <Tag size={11} weight="bold" aria-hidden />
+                      {ex.niche}
+                    </span>
+                  )}
+                  <span className="inline-flex items-center gap-1 rounded-full bg-coral-50 px-2.5 py-1 text-[11.5px] font-semibold text-coral-700">
+                    <MapPin size={11} weight="bold" aria-hidden />
+                    {ex.where}
+                  </span>
+                  {ex.lang && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-coral-50 px-2.5 py-1 text-[11.5px] font-semibold text-coral-700">
+                      <Translate size={11} weight="bold" aria-hidden />
+                      {ex.lang}
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 text-[13.5px] leading-relaxed text-charcoal-400">
+            These are example searches, not a promise of results for each one. Location and language options in the
+            filters come from the creators in the database, so what you can select reflects current coverage.
+          </p>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ METRICS */}
+      <section aria-labelledby="metrics" className="bg-white py-20 sm:py-28">
+        <Container>
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeading
+                id="metrics"
+                eyebrow="Creator analytics"
+                title="Go Beyond Follower Counts. Evaluate the Right Creator Metrics."
+                intro="Followers tell you how many people could see a post. Engagement, views and posting frequency tell you how many probably will. Compare several signals before you shortlist anyone."
+              />
+              <div className="reveal mt-8 rounded-[24px] bg-charcoal p-6 text-white">
+                <h3 className="text-[14px] font-bold">Engagement quality labels on every profile</h3>
+                <div className="mt-4 space-y-3">
+                  {ENGAGEMENT_BANDS.map((b) => (
+                    <div key={b.label}>
+                      <div className="mb-1 flex justify-between text-[12.5px] font-semibold">
+                        <span>{b.label}</span>
+                        <span className="text-white/55">{b.range}</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-white/10">
+                        <div className={`h-full rounded-full bg-gradient-to-r ${b.color}`} style={{ width: b.width }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-[12.5px] leading-relaxed text-white/50">
+                  Labels are a quick comparison aid. They don&apos;t predict campaign results — always review the
+                  creator&apos;s content too.
+                </p>
+              </div>
+            </div>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {METRICS.map(({ icon, label, text }) => (
+                <li key={label} className="reveal rounded-[22px] border border-sand-200 bg-cream/50 p-5">
+                  <IconTile icon={icon} />
+                  <h3 className="mt-4 text-[16px] font-bold tracking-tight">{label}</h3>
+                  <p className="mt-1 text-[14px] leading-relaxed text-charcoal-500">{text}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-12 flex flex-col items-center gap-3 text-center">
+            <PrimaryCta cta="signup-metrics">Compare creators free</PrimaryCta>
+            <p className="text-[13px] text-charcoal-400">
+              Opening a full profile uses {CREDIT_COSTS.openProfile} credit the first time.
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ CONTACTS */}
+      <section aria-labelledby="contacts" className="py-20 sm:py-28">
+        <Container className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="reveal order-2 lg:order-1">
+            <div className="rounded-[28px] border border-sand-200 bg-white p-6 shadow-lift sm:p-8">
+              <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Contact details</p>
+              <div className="mt-5 space-y-3">
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-cream/70 p-4">
+                  <EnvelopeSimple size={20} weight="duotone" className="text-coral" aria-hidden />
+                  <span className="text-[14px] font-semibold">Email on file</span>
+                  <span className="ml-auto">
+                    <CreditPill cost={CREDIT_COSTS.revealEmail} label="credit to reveal" />
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-cream/70 p-4">
+                  <Phone size={20} weight="duotone" className="text-coral" aria-hidden />
+                  <span className="text-[14px] font-semibold">Phone on file</span>
+                  <span className="ml-auto">
+                    <CreditPill cost={CREDIT_COSTS.revealPhone} label="credits to reveal" />
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-dashed border-sand-300 p-4 text-charcoal-400">
+                  <Phone size={20} weight="duotone" aria-hidden />
+                  <span className="text-[14px] font-semibold">Not available</span>
+                  <span className="ml-auto text-[12.5px] font-bold text-emerald-700">0 credits charged</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="order-1 lg:order-2">
+            <SectionHeading
+              id="contacts"
+              eyebrow="Creator contacts"
+              title="Find Creator Contact Details and Simplify Outreach"
+              intro="When a creator makes your shortlist, reveal the email or phone number on file and contact them directly."
+            />
+            <ul className="mt-8 space-y-3.5">
+              {[
+                "Results show whether an email or phone is available before you spend credits — and you can filter for creators who have one.",
+                `Revealing an email costs ${CREDIT_COSTS.revealEmail} credit; a phone number costs ${CREDIT_COSTS.revealPhone}. If nothing is on file, you aren't charged.`,
+                "Revealed contacts stay unlocked on your account, so you never pay twice for the same one.",
+                "Not every creator has contact details listed, and availability varies.",
+              ].map((t) => (
+                <li key={t} className="flex gap-3 text-[15.5px] leading-relaxed text-charcoal-500">
+                  <Check size={18} weight="bold" className="mt-1 shrink-0 text-coral" aria-hidden />
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 flex gap-2.5 rounded-2xl bg-white p-4 text-[13.5px] leading-relaxed text-charcoal-500 ring-1 ring-sand-200">
+              <ShieldCheck size={18} weight="fill" className="mt-0.5 shrink-0 text-emerald-600" aria-hidden />
+              Use contact details only for relevant collaboration outreach, and in line with applicable privacy law —
+              including India&apos;s Digital Personal Data Protection Act, 2023 — and Instagram&apos;s terms.
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ LISTS */}
+      <section aria-labelledby="lists" className="bg-white py-20 sm:py-28">
+        <Container className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <SectionHeading
+              id="lists"
+              eyebrow="My lists"
+              title="Organise Your Influencer Research with Creator Lists"
+              intro="Keep every promising creator in one place instead of a scattered spreadsheet."
+            />
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {[
+                ["Save in one click", "Add a creator to a list from search results or their profile."],
+                ["Multiple lists", `Up to ${MAX_LISTS_PER_USER} lists, each holding up to ${MAX_CREATORS_PER_LIST} creators.`],
+                ["Organise your way", "By campaign, client, niche or city — with a name and description."],
+                ["Revisit any time", "Come back to saved creators when planning the next brief."],
+              ].map(([k, v]) => (
+                <li key={k} className="rounded-2xl bg-cream/70 p-4">
+                  <h3 className="text-[15px] font-bold tracking-tight">{k}</h3>
+                  <p className="mt-1 text-[14px] leading-relaxed text-charcoal-500">{v}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="reveal rounded-[28px] border border-sand-200 bg-cream/60 p-6 sm:p-8" aria-hidden>
+            <div className="flex items-center justify-between">
+              <p className="text-[15px] font-bold">My lists</p>
+              <span className="inline-flex items-center gap-1 rounded-lg bg-charcoal px-2.5 py-1.5 text-[12px] font-semibold text-white">
+                <Plus size={12} weight="bold" />
+                New list
               </span>
             </div>
-          ))}
-        </div>
-      </div>
-      <p className="mt-5 flex items-center justify-center gap-1.5 text-[13px] text-charcoal-400">
-        <ShieldCheck size={16} weight="fill" className="text-emerald-500" />
-        Secure payments by Razorpay · UPI, cards and netbanking
-      </p>
-    </section>
+            <div className="mt-5 space-y-2.5">
+              {[
+                { n: "Festive drop — Maharashtra", d: "Fashion, Marathi + Hindi", c: 18 },
+                { n: "Café launch — Bengaluru", d: "Food creators, 5K–50K", c: 9 },
+                { n: "Fitness reels — Q1", d: "Health & Fitness, ER ≥ 3%", c: 24 },
+                { n: "Client: skincare brand", d: "Beauty, Tier 2 cities", c: 31 },
+              ].map((l) => (
+                <div key={l.n} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-sand-200/70">
+                  <Folders size={20} weight="fill" className="shrink-0 text-tangerine" />
+                  <div className="min-w-0">
+                    <p className="truncate text-[14px] font-semibold">{l.n}</p>
+                    <p className="truncate text-[12px] text-charcoal-400">{l.d}</p>
+                  </div>
+                  <span className="ml-auto rounded-full bg-coral-50 px-2 py-0.5 text-[11.5px] font-bold text-coral-700">
+                    {l.c}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-[12px] text-charcoal-400">Example lists for illustration.</p>
+          </div>
+        </Container>
+      </section>
 
-    {/* FAQ */}
-    <section id="faq" className="scroll-mt-20 bg-white py-24">
-      <div className="mx-auto max-w-[820px] px-4 sm:px-6">
-        <SectionHeading eyebrow="FAQ" title="Questions, answered" />
-        <div className="mt-12 divide-y divide-sand-200 rounded-[28px] border border-sand-200 bg-cream/40 px-6 sm:px-8">
-          {FAQS.map((f) => (
-            <details key={f.q} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[16px] font-bold [&::-webkit-details-marker]:hidden">
-                {f.q}
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-charcoal-400 ring-1 ring-sand-200 transition-transform group-open:rotate-45">
-                  <Plus size={14} weight="bold" />
+      {/* ------------------------------------------------------------ HOW IT WORKS */}
+      <section id="how-it-works" aria-labelledby="how-title" className="scroll-mt-20 py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            id="how-title"
+            center
+            eyebrow="How it works"
+            title="How Kudozz Influencer Discovery Works"
+            intro="From sign-up to a contactable shortlist in four steps."
+          />
+          <ol className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map(({ icon: Icon, title, text }, i) => (
+              <li key={title} className="reveal relative rounded-[24px] border border-sand-200 bg-white p-6 shadow-soft">
+                <span className="relative flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-brand-gradient text-white shadow-glow">
+                  <Icon size={22} weight="duotone" aria-hidden />
                 </span>
-              </summary>
-              <p className="mt-3 pr-10 text-[15px] leading-relaxed text-charcoal-500">{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* FINAL CTA */}
-    <section className="px-4 py-20 sm:px-6">
-      <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[36px] bg-charcoal px-6 py-16 text-center text-white sm:px-12 sm:py-20">
-        <div className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-coral/45 blur-[110px]" />
-        <div className="pointer-events-none absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-tangerine/30 blur-[110px]" />
-        <div className="grain pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay" />
-        <div className="relative mx-auto max-w-[680px]">
-          <SealCheck size={40} weight="fill" className="mx-auto text-tangerine" />
-          <h2 className="mt-5 font-display text-[36px] font-medium leading-[1.06] tracking-[-0.02em] sm:text-[54px]">
-            Your next great creator partnership is <span className="italic text-tangerine">one search away.</span>
-          </h2>
-          <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-relaxed text-white/60 sm:text-[17px]">
-            Sign up in a minute and get {FREE_CREDITS} free credits to discover, shortlist and contact creators today.
-          </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <PrimaryCta />
-            <Link
-              href="/login"
-              className="inline-flex h-14 items-center justify-center rounded-2xl border border-white/15 px-7 text-[16px] font-semibold text-white transition-colors hover:bg-white/5"
-            >
-              I already have an account
-            </Link>
+                <p className="mt-5 text-[12px] font-bold uppercase tracking-[0.14em] text-coral-700">Step {i + 1}</p>
+                <h3 className="mt-1 text-[18px] font-bold tracking-tight">{title}</h3>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-charcoal-500">{text}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-12 flex justify-center">
+            <PrimaryCta cta="signup-how">Create your free account</PrimaryCta>
           </div>
-          <p className="mt-6 text-[13px] text-white/40">No credit card required · No subscription</p>
-        </div>
-      </div>
-    </section>
+        </Container>
+      </section>
 
-    {/* FOOTER */}
-    <footer className="border-t border-sand-200/80">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-6 md:flex-row md:items-start md:justify-between">
-        <div className="max-w-[320px]">
+      {/* ------------------------------------------------------------ AUDIENCES */}
+      <section aria-labelledby="audiences" className="bg-white py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            id="audiences"
+            eyebrow="Who it's for"
+            title="Built for Brands, Agencies and Growing Businesses"
+            intro="Kudozz handles the creator research. Strategy, briefs, negotiation and campaign management stay with you."
+          />
+          <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
+            {AUDIENCES.map(({ icon, title, text }, i) => (
+              <li
+                key={title}
+                className={cn(
+                  "reveal rounded-[24px] border border-sand-200 p-6",
+                  i < 2 ? "bg-cream/70 lg:col-span-3" : "bg-white lg:col-span-2",
+                )}
+              >
+                <IconTile icon={icon} />
+                <h3 className="mt-5 text-[18px] font-bold tracking-tight">{title}</h3>
+                <p className="mt-2 text-[14.5px] leading-relaxed text-charcoal-500">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ CATEGORIES */}
+      <section aria-labelledby="categories" className="py-20 sm:py-28">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+            <div>
+              <SectionHeading
+                id="categories"
+                eyebrow="Categories & platforms"
+                title="Discover Creators Across Different Categories"
+                intro="Filter by one category or several. Creators can belong to more than one."
+              />
+              <div className="mt-8 rounded-[24px] border border-sand-200 bg-white p-5">
+                <h3 className="flex items-center gap-2 text-[15px] font-bold">
+                  <InstagramLogo size={20} weight="duotone" className="text-coral" aria-hidden />
+                  Platform coverage
+                </h3>
+                <p className="mt-2 text-[14px] leading-relaxed text-charcoal-500">
+                  Kudozz currently covers <strong className="font-semibold text-charcoal">Instagram</strong> creators.
+                  YouTube and other platforms aren&apos;t available yet.
+                </p>
+              </div>
+            </div>
+            <ul className="flex flex-wrap content-start gap-2.5">
+              {visibleNiches.map((n) => (
+                <li
+                  key={n.slug}
+                  className="rounded-full border border-sand-200 bg-white px-4 py-2.5 text-[14.5px] font-semibold text-charcoal-600 shadow-soft"
+                >
+                  {n.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ PRICING */}
+      <section id="pricing" aria-labelledby="pricing-title" className="scroll-mt-20 bg-white py-20 sm:py-28">
+        <Container>
+          <SectionHeading
+            id="pricing-title"
+            center
+            eyebrow="Pricing"
+            title="Flexible Credits. Pay for the Creator Insights You Need."
+            intro={`No subscription. Start with ${SIGNUP_CREDITS} free credits (valid for ${SIGNUP_CREDIT_DAYS} days), then buy a credit pack when you need more. Purchased credits never expire.`}
+          />
+
+          <div className="mt-12 grid gap-6 rounded-[28px] border border-sand-200 bg-cream/50 p-6 sm:p-8 lg:grid-cols-[1fr_1.5fr] lg:items-center">
+            <div>
+              <h3 className="text-[22px] font-bold tracking-tight">What uses credits</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-charcoal-500">
+                You spend credits only when you unlock something, and never twice for the same thing. Free credits are
+                used before purchased ones.
+              </p>
+            </div>
+            <ul className="grid gap-2.5 sm:grid-cols-2">
+              {CREDIT_ROWS.map(({ icon: Icon, label, note, cost }) => (
+                <li
+                  key={label}
+                  className={cn("flex items-center gap-3 rounded-2xl bg-white p-3.5 ring-1 ring-sand-200/80", cost === 0 && "sm:col-span-2")}
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-coral-50 text-coral" aria-hidden>
+                    <Icon size={19} weight="duotone" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[14px] font-bold">{label}</p>
+                    <p className="text-[12.5px] text-charcoal-400">{note}</p>
+                  </div>
+                  {cost === 0 ? (
+                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[12.5px] font-bold text-emerald-700">Free</span>
+                  ) : (
+                    <CreditPill cost={cost} />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <h3 className="mt-14 text-center text-[13px] font-bold uppercase tracking-[0.14em] text-charcoal-400">
+            Credit packs
+          </h3>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {CREDIT_PACKS.map((pack) => {
+              const savings = savingsPercent(pack);
+              return (
+                <li
+                  key={pack.id}
+                  className={cn(
+                    "relative flex flex-col rounded-[26px] border bg-white p-6",
+                    pack.popular
+                      ? "border-coral shadow-[0_0_0_4px_rgba(243,107,74,0.12),0_30px_60px_-30px_rgba(243,107,74,0.5)]"
+                      : "border-sand-200",
+                  )}
+                >
+                  {pack.popular && (
+                    <span className="absolute -top-3 left-6 whitespace-nowrap rounded-full bg-brand-gradient px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+                      Most popular
+                    </span>
+                  )}
+                  <p className="text-[16px] font-bold">{pack.name}</p>
+                  <p className="text-[13px] text-charcoal-400">{pack.tagline}</p>
+                  <p className="mt-5 text-[38px] font-bold leading-none tracking-tight">{formatInr(pack.priceInr)}</p>
+                  <p className="mt-2 text-[14px] font-semibold text-charcoal-600">
+                    {pack.credits.toLocaleString("en-IN")} credits
+                  </p>
+                  <p className="mt-1 flex flex-wrap items-center gap-2 text-[12.5px] text-charcoal-400">
+                    {formatInr(perCredit(pack), 2)} per credit
+                    {savings > 0 && (
+                      <span className="rounded-full bg-emerald-50 px-1.5 py-0.5 text-[11px] font-bold text-emerald-700">
+                        Save {savings}%
+                      </span>
+                    )}
+                  </p>
+                  <ul className="mb-6 mt-5 space-y-1.5 text-[13px] text-charcoal-500">
+                    <li>Up to {Math.floor(pack.credits / CREDIT_COSTS.openProfile).toLocaleString("en-IN")} profile opens</li>
+                    <li>
+                      or up to {Math.floor(pack.credits / CREDIT_COSTS.advancedFilter).toLocaleString("en-IN")} advanced
+                      searches
+                    </li>
+                  </ul>
+                  <Link
+                    href={SIGNUP_HREF}
+                    data-cta={`pricing-${pack.id}`}
+                    className={cn(
+                      "mt-auto inline-flex h-11 items-center justify-center rounded-xl text-[14.5px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral",
+                      pack.popular
+                        ? "bg-brand-gradient text-white shadow-glow hover:brightness-[1.05]"
+                        : "border border-sand-200 bg-white text-charcoal hover:border-sand-300",
+                    )}
+                  >
+                    Get Started
+                    <span className="sr-only"> with the {pack.name} pack</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-center text-[13px] text-charcoal-400">
+            <ShieldCheck size={16} weight="fill" className="text-emerald-600" aria-hidden />
+            Prices in INR. Packs are bought inside the app after sign-up, with secure payment by Razorpay (UPI, cards,
+            netbanking).
+          </p>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ FAQ */}
+      <section id="faq" aria-labelledby="faq-title" className="scroll-mt-20 py-20 sm:py-28">
+        <Container className="grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+          <div>
+            <SectionHeading
+              id="faq-title"
+              eyebrow="FAQs"
+              title="Frequently Asked Questions About Influencer Discovery"
+              className="lg:sticky lg:top-28"
+              intro={
+                <>
+                  Still curious? Email{" "}
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="font-semibold text-coral-700 underline-offset-2 hover:underline">
+                    {SUPPORT_EMAIL}
+                  </a>
+                  .
+                </>
+              }
+            />
+          </div>
+          <div className="divide-y divide-sand-200 rounded-[28px] border border-sand-200 bg-white px-5 sm:px-8">
+            {FAQS.map((f, i) => (
+              <details key={f.q} className="group py-5" open={i === 0}>
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 rounded-lg text-[16px] font-bold leading-snug focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-coral/50 [&::-webkit-details-marker]:hidden">
+                  <h3>{f.q}</h3>
+                  <span
+                    aria-hidden
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-cream text-charcoal-400 ring-1 ring-sand-200 transition-transform group-open:rotate-45"
+                  >
+                    <Plus size={13} weight="bold" />
+                  </span>
+                </summary>
+                <p className="mt-3 pr-2 text-[15px] leading-relaxed text-charcoal-500 sm:pr-10">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------ FINAL CTA */}
+      <section aria-labelledby="final-cta" className="px-4 pb-20 sm:px-6">
+        <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[32px] bg-charcoal px-6 py-16 text-white sm:px-12 sm:py-20">
+          <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-coral/40 blur-[110px]" />
+          <div aria-hidden className="pointer-events-none absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-tangerine/25 blur-[110px]" />
+          <div aria-hidden className="grain pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay" />
+          <div className="relative grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+            <div>
+              <h2
+                id="final-cta"
+                className="text-balance font-display text-[34px] font-medium leading-[1.06] tracking-[-0.02em] sm:text-[50px]"
+              >
+                Start Finding the Right Creators for Your <span className="italic text-tangerine">Next Campaign</span>
+              </h2>
+              <p className="mt-5 max-w-[520px] text-[16px] leading-relaxed text-white/65 sm:text-[17px]">
+                Spend less time searching manually and more time building meaningful creator partnerships.
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <PrimaryCta cta="signup-final" className="focus-visible:ring-offset-charcoal" />
+                <SecondaryCta href="#pricing" dark cta="pricing-final">
+                  Explore Pricing
+                </SecondaryCta>
+              </div>
+            </div>
+            <ul className="space-y-3 text-[15px]" aria-label="What you get when you sign up">
+              {[
+                `${SIGNUP_CREDITS} free credits, valid for ${SIGNUP_CREDIT_DAYS} days`,
+                "Free basic search by name and follower range",
+                "Advanced filters, creator profiles and lists",
+                "No subscription — top up only when you need to",
+              ].map((t) => (
+                <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 text-white/85">
+                  <CheckCircle size={18} weight="fill" className="shrink-0 text-tangerine" aria-hidden />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    {/* ------------------------------------------------------------ FOOTER */}
+    <footer className="border-t border-sand-200/80 bg-white">
+      <Container className="grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="max-w-[340px]">
           <Logo />
-          <p className="mt-4 text-[14px] leading-relaxed text-charcoal-400">
-            Discover, shortlist and contact the right Instagram creators for your brand.
+          <p className="mt-4 text-[14px] leading-relaxed text-charcoal-500">
+            {APP_NAME} helps brands and agencies in India search, evaluate and shortlist Instagram creators.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-10 text-[14px] sm:grid-cols-3">
-          <div>
-            <p className="font-bold">Product</p>
-            <ul className="mt-3 space-y-2 text-charcoal-400">
-              <li><a href="#features" className="hover:text-charcoal">Features</a></li>
-              <li><a href="#pricing" className="hover:text-charcoal">Pricing</a></li>
-              <li><a href="#faq" className="hover:text-charcoal">FAQ</a></li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-bold">Account</p>
-            <ul className="mt-3 space-y-2 text-charcoal-400">
-              <li><Link href={SIGNUP} className="hover:text-charcoal">Create account</Link></li>
-              <li><Link href="/login" className="hover:text-charcoal">Sign in</Link></li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-bold">Contact</p>
-            <ul className="mt-3 space-y-2 text-charcoal-400">
-              <li><a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-charcoal">{SUPPORT_EMAIL}</a></li>
-              <li><a href={PARENT_SITE_URL} className="hover:text-charcoal">{PARENT_SITE_LABEL}</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-sand-200/80 py-6 text-center text-[12.5px] text-charcoal-300">
-        © {new Date().getFullYear()} Kudozz. All rights reserved.
+        <nav aria-label="Product">
+          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Product</p>
+          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
+            <li><a href="#features" className="hover:text-coral-700">Features</a></li>
+            <li><a href="#how-it-works" className="hover:text-coral-700">How It Works</a></li>
+            <li><a href="#pricing" className="hover:text-coral-700">Pricing</a></li>
+            <li><a href="#faq" className="hover:text-coral-700">FAQs</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Account">
+          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Account</p>
+          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
+            <li><Link href={SIGNUP_HREF} data-cta="signup-footer" className="hover:text-coral-700">Sign up</Link></li>
+            <li><Link href={LOGIN_HREF} data-cta="login" className="hover:text-coral-700">Login</Link></li>
+          </ul>
+        </nav>
+        <nav aria-label="Company">
+          <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">Company</p>
+          <ul className="mt-4 space-y-2.5 text-[14px] text-charcoal-600">
+            <li><a href={PARENT_CONTACT_URL} className="hover:text-coral-700">Contact</a></li>
+            <li><a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-coral-700">{SUPPORT_EMAIL}</a></li>
+            <li><a href={PARENT_SITE_URL} className="hover:text-coral-700">{PARENT_SITE_LABEL}</a></li>
+            <li className="flex gap-3 pt-1">
+              <a href={SOCIAL_LINKS.instagram} rel="noopener" target="_blank" aria-label="Kudozz on Instagram" className="text-charcoal-400 hover:text-coral-700">
+                <InstagramLogo size={20} weight="duotone" aria-hidden />
+              </a>
+              <a href={SOCIAL_LINKS.linkedin} rel="noopener" target="_blank" aria-label="Kudozz on LinkedIn" className="text-[13px] font-semibold text-charcoal-400 hover:text-coral-700">
+                LinkedIn
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </Container>
+      <div className="border-t border-sand-200/80">
+        <Container className="py-6 text-[12.5px] text-charcoal-400">
+          © {new Date().getFullYear()} {LEGAL_NAME}. All rights reserved.
+        </Container>
       </div>
     </footer>
   </div>

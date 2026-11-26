@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useCallback, useEffect, useState } from "react";
+import StoreProvider from "@/app/StoreProvider";
 import AuthGuard from "@/components/guards/AuthGuard";
 import Sidebar, { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
@@ -50,22 +51,24 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const sidebarWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH;
 
   return (
-    <AuthGuard>
-      <div className="min-h-screen bg-cream" style={{ ["--sidebar-w" as string]: `${sidebarWidth}px` }}>
-        <Sidebar
-          open={menuOpen}
-          onClose={() => setMenuOpen(false)}
-          collapsed={collapsed && !menuOpen}
-          onToggleCollapsed={toggleCollapsed}
-        />
-        <div className="transition-[padding] duration-300 ease-out lg:pl-[var(--sidebar-w)]">
-          <Topbar onMenu={() => setMenuOpen(true)} />
-          <main className="px-4 pb-16 pt-6 sm:px-8">{children}</main>
+    <StoreProvider>
+      <AuthGuard>
+        <div className="min-h-screen bg-cream" style={{ ["--sidebar-w" as string]: `${sidebarWidth}px` }}>
+          <Sidebar
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            collapsed={collapsed && !menuOpen}
+            onToggleCollapsed={toggleCollapsed}
+          />
+          <div className="transition-[padding] duration-300 ease-out lg:pl-[var(--sidebar-w)]">
+            <Topbar onMenu={() => setMenuOpen(true)} />
+            <main className="px-4 pb-16 pt-6 sm:px-8">{children}</main>
+          </div>
+          <AddToListModal />
+          <BuyCreditsModal />
+          <PurchaseCelebration />
         </div>
-        <AddToListModal />
-        <BuyCreditsModal />
-        <PurchaseCelebration />
-      </div>
-    </AuthGuard>
+      </AuthGuard>
+    </StoreProvider>
   );
 }

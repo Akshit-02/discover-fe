@@ -1,18 +1,34 @@
 import type { Metadata } from "next";
 import LandingPage from "@/components/landing/LandingPage";
+import StructuredData from "@/components/landing/StructuredData";
+import { META } from "@/components/landing/content";
+import { APP_NAME, SITE_URL } from "@/config/brand";
 
 export const metadata: Metadata = {
-  title: { absolute: "Kudozz Influencer Discovery — Find the right Instagram creators in India" },
-  description:
-    "Search Instagram creators by niche, city, language and real engagement. Build shortlists in minutes, reveal contacts in a click and pay only for what you unlock. Start free with 30 credits.",
+  title: { absolute: META.title },
+  description: META.description,
+  alternates: { canonical: `${SITE_URL}/` },
+  robots: { index: true, follow: true },
   openGraph: {
-    title: "Find creators your customers already trust — Kudozz",
-    description:
-      "Instagram influencer discovery for Indian brands. 12 precision filters, engagement insights, direct contacts. Start free.",
     type: "website",
+    url: "/",
+    siteName: APP_NAME,
+    locale: "en_IN",
+    title: META.ogTitle,
+    description: META.ogDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META.ogTitle,
+    description: META.ogDescription,
   },
 };
 
 export default function HomePage() {
-  return <LandingPage />;
+  return (
+    <>
+      <StructuredData />
+      <LandingPage />
+    </>
+  );
 }

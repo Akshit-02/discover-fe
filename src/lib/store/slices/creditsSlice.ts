@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getErrorMessage, myCreditsAPI } from "@/lib/graphql/handleApi";
 import { CreditBalance, CreditCosts } from "@/lib/models/creator";
+import { CREDIT_COSTS } from "@/lib/constants/credits";
 import { fetchCreators } from "./creatorsSlice";
 
-export const DEFAULT_COSTS: CreditCosts = { advancedFilter: 2, revealEmail: 1, revealPhone: 2, openProfile: 1 };
+export const DEFAULT_COSTS: CreditCosts = CREDIT_COSTS;
 
 export interface PurchaseCelebration {
   packName: string;
