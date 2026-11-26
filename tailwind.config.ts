@@ -70,6 +70,10 @@ const config: Config = {
         "brand-gradient": "linear-gradient(135deg, #F36B4A 0%, #FFAD66 100%)",
       },
       keyframes: {
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
         shimmer: {
           "0%": { backgroundPosition: "-400px 0" },
           "100%": { backgroundPosition: "400px 0" },

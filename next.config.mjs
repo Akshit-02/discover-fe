@@ -5,7 +5,6 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      { source: "/", destination: "/dashboard/discover", permanent: false },
       { source: "/dashboard", destination: "/dashboard/discover", permanent: false },
     ];
   },
