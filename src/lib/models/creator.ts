@@ -73,7 +73,11 @@ export interface CreditCosts {
 }
 
 export interface CreditBalance {
+  /** Free + purchased. */
   balance: number;
+  freeBalance: number;
+  /** Purchased credits never expire. */
+  paidBalance: number;
   expiresAt?: string | null;
   expired: boolean;
   costs: CreditCosts;
@@ -97,5 +101,27 @@ export interface CreatorProfile {
   emailRevealed: boolean;
   phoneRevealed: boolean;
   charged: number;
+  credits: CreditBalance;
+}
+
+export interface CreditOrder {
+  orderId: string;
+  amount: number;
+  currency: string;
+  keyId: string;
+  packId: string;
+  packName: string;
+  credits: number;
+  prefillName?: string | null;
+  prefillEmail?: string | null;
+  prefillContact?: string | null;
+}
+
+export interface CreditPurchaseResult {
+  orderId: string;
+  packId: string;
+  packName: string;
+  creditsAdded: number;
+  alreadyProcessed: boolean;
   credits: CreditBalance;
 }

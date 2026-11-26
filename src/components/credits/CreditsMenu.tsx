@@ -9,7 +9,7 @@ import BuyCreditsButton from "./BuyCreditsButton";
 
 /** Topbar balance pill with a popover explaining what credits are spent on. */
 const CreditsMenu = () => {
-  const { balance, expiresAt, expired, costs, loaded } = useAppSelector((s) => s.credits);
+  const { balance, freeBalance, paidBalance, expiresAt, expired, costs, loaded } = useAppSelector((s) => s.credits);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const low = loaded && balance < Math.max(costs.advancedFilter, costs.revealPhone);
@@ -65,11 +65,22 @@ const CreditsMenu = () => {
             <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-coral/40 blur-[60px]" />
             <p className="relative text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">Credit balance</p>
             <p className="relative mt-1 text-3xl font-bold tracking-tight">{balance.toLocaleString()}</p>
-            {expiresAt && (
-              <p className={cn("relative mt-0.5 text-xs", expired ? "text-coral-300" : "text-white/55")}>
-                {expiryLabel(expiresAt, expired)}
-              </p>
-            )}
+            <div className="relative mt-3 grid grid-cols-2 gap-2 text-xs">
+              <div className="rounded-xl bg-white/[0.07] px-3 py-2">
+                <p className="text-white/45">Free</p>
+                <p className="font-semibold">{freeBalance.toLocaleString()}</p>
+                {expiresAt && (
+                  <p className={cn("mt-0.5 text-[10.5px]", expired ? "text-coral-300" : "text-white/45")}>
+                    {expiryLabel(expiresAt, expired).split(" · ")[0]}
+                  </p>
+                )}
+              </div>
+              <div className="rounded-xl bg-white/[0.07] px-3 py-2">
+                <p className="text-white/45">Purchased</p>
+                <p className="font-semibold">{paidBalance.toLocaleString()}</p>
+                <p className="mt-0.5 text-[10.5px] text-white/45">Never expire</p>
+              </div>
+            </div>
           </div>
           <div className="px-5 py-4">
             <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-charcoal-300">What costs credits</p>
@@ -91,7 +102,7 @@ const CreditsMenu = () => {
             <BuyCreditsButton fullWidth />
             {low && (
               <p className="mt-2 text-center text-[11.5px] font-medium text-coral-700">
-                {expired ? "Your credits have expired." : `Only ${creditLabel(balance)} left.`}
+                {expired && !balance ? "Your free credits have expired." : `Only ${creditLabel(balance)} left.`}
               </p>
             )}
           </div>

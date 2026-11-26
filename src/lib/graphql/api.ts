@@ -66,6 +66,8 @@ const CREATOR_FIELDS = /* GraphQL */ `
 
 const CREDIT_FIELDS = /* GraphQL */ `
   balance
+  freeBalance
+  paidBalance
   expiresAt
   expired
   costs {
@@ -247,6 +249,38 @@ export const submitSupportMessage = /* GraphQL */ `
   mutation SubmitSupportMessage($input: SupportMessageInput!) {
     submitSupportMessage(input: $input) {
       ${SUPPORT_FIELDS}
+    }
+  }
+`;
+
+export const createCreditOrder = /* GraphQL */ `
+  mutation CreateCreditOrder($packId: String!) {
+    createCreditOrder(packId: $packId) {
+      orderId
+      amount
+      currency
+      keyId
+      packId
+      packName
+      credits
+      prefillName
+      prefillEmail
+      prefillContact
+    }
+  }
+`;
+
+export const verifyCreditPayment = /* GraphQL */ `
+  mutation VerifyCreditPayment($orderId: ID!, $paymentId: String!, $signature: String!) {
+    verifyCreditPayment(orderId: $orderId, paymentId: $paymentId, signature: $signature) {
+      orderId
+      packId
+      packName
+      creditsAdded
+      alreadyProcessed
+      credits {
+        ${CREDIT_FIELDS}
+      }
     }
   }
 `;

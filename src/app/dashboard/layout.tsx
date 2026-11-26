@@ -6,6 +6,7 @@ import Sidebar, { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from "@/components/da
 import Topbar from "@/components/dashboard/Topbar";
 import AddToListModal from "@/components/lists/AddToListModal";
 import BuyCreditsModal from "@/components/credits/BuyCreditsModal";
+import PurchaseCelebration from "@/components/credits/PurchaseCelebration";
 
 const COLLAPSED_KEY = "kudozz.sidebarCollapsed";
 
@@ -63,6 +64,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
         <AddToListModal />
         <BuyCreditsModal />
+        <PurchaseCelebration />
       </div>
     </AuthGuard>
   );

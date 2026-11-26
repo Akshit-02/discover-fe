@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle, Coins, Crown, LockSimple, Sparkle } from "@phosphor-icons/react";
+import { CheckCircle, Coins, Crown, LockSimple, ShieldCheck, Sparkle, WarningCircle } from "@phosphor-icons/react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { CREDIT_PACKS, CreditPack, formatInr, perCredit, savingsPercent } from "@/lib/constants/creditPacks";
+import { createCreditOrderAPI, getErrorMessage, verifyCreditPaymentAPI } from "@/lib/graphql/handleApi";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { closeBuyCredits } from "@/lib/store/slices/creditsSlice";
+import { celebratePurchase, closeBuyCredits, fetchCredits, setCredits } from "@/lib/store/slices/creditsSlice";
 import { cn } from "@/lib/utils/cn";
+import { loadRazorpay, openRazorpay } from "@/lib/utils/razorpay";
 
 const DEFAULT_PACK = CREDIT_PACKS.find((p) => p.popular)?.id ?? CREDIT_PACKS[0].id;
 
@@ -66,17 +68,93 @@ const PackCard = ({ pack, selected, onSelect }: { pack: CreditPack; selected: bo
   );
 };
 
-/** Credit packs. Checkout isn't live yet, so the pay button stays disabled. */
+type PayState = "idle" | "starting" | "checkout" | "verifying";
+
+/** Credit packs → Razorpay Checkout → server-side verification → celebration. */
 const BuyCreditsModal = () => {
   const dispatch = useAppDispatch();
   const { buyOpen, balance, costs } = useAppSelector((s) => s.credits);
   const [selectedId, setSelectedId] = useState<CreditPack["id"]>(DEFAULT_PACK);
+  const [payState, setPayState] = useState<PayState>("idle");
+  const [notice, setNotice] = useState<{ tone: "error" | "info"; text: string } | null>(null);
   const selected = CREDIT_PACKS.find((p) => p.id === selectedId) ?? CREDIT_PACKS[0];
-  const close = () => dispatch(closeBuyCredits());
+  const busy = payState !== "idle";
+  const close = () => {
+    if (payState === "verifying") return; // don't lose the confirmation mid-flight
+    dispatch(closeBuyCredits());
+  };
 
   useEffect(() => {
-    if (buyOpen) setSelectedId(DEFAULT_PACK);
+    if (!buyOpen) return;
+    setSelectedId(DEFAULT_PACK);
+    setPayState("idle");
+    setNotice(null);
+    loadRazorpay().catch(() => undefined); // warm up so Checkout opens instantly
   }, [buyOpen]);
+
+  const pay = async () => {
+    setNotice(null);
+    setPayState("starting");
+    try {
+      const [order] = await Promise.all([createCreditOrderAPI(selected.id), loadRazorpay()]);
+      setPayState("checkout");
+      openRazorpay(
+        {
+          key: order.keyId,
+          amount: order.amount,
+          currency: order.currency,
+          order_id: order.orderId,
+          name: "Kudozz",
+          description: `${order.packName} pack · ${order.credits.toLocaleString("en-IN")} credits`,
+          prefill: {
+            name: order.prefillName ?? undefined,
+            email: order.prefillEmail ?? undefined,
+            contact: order.prefillContact ?? undefined,
+          },
+          theme: { color: "#F36B4A" },
+          modal: { ondismiss: () => setPayState("idle"), confirm_close: true },
+          handler: async (response) => {
+            setPayState("verifying");
+            try {
+              const result = await verifyCreditPaymentAPI(
+                response.razorpay_order_id,
+                response.razorpay_payment_id,
+                response.razorpay_signature,
+              );
+              dispatch(setCredits(result.credits));
+              dispatch(
+                celebratePurchase({
+                  packName: result.packName,
+                  creditsAdded: result.creditsAdded,
+                  amountInr: order.amount / 100,
+                  paymentId: response.razorpay_payment_id,
+                  balance: result.credits.balance,
+                }),
+              );
+              setPayState("idle");
+            } catch {
+              // The payment went through; the webhook will add the credits even if this check failed.
+              setPayState("idle");
+              setNotice({
+                tone: "info",
+                text: `Payment received (ID ${response.razorpay_payment_id}). We're confirming it — your credits will appear in a minute or two. If they don't, email connect@kudozz.in with this ID.`,
+              });
+              setTimeout(() => dispatch(fetchCredits()), 8000);
+            }
+          },
+        },
+        (failure) => {
+          setNotice({
+            tone: "error",
+            text: failure.error?.description || "The payment didn't go through. No money was taken — please try again.",
+          });
+        },
+      );
+    } catch (error) {
+      setPayState("idle");
+      setNotice({ tone: "error", text: getErrorMessage(error, "Couldn't start the payment. Please try again.") });
+    }
+  };
 
   const uses = [
     { label: "profile unlocks", value: Math.floor(selected.credits / costs.openProfile) },
@@ -111,23 +189,36 @@ const BuyCreditsModal = () => {
             Total <span className="font-bold text-charcoal">{formatInr(selected.priceInr)}</span>
           </div>
           <div className="flex flex-col items-stretch gap-1 sm:items-end">
-            <Button disabled leftIcon={<LockSimple size={16} weight="bold" />} title="Payments are coming soon">
-              Pay {formatInr(selected.priceInr)}
+            <Button onClick={pay} loading={busy} leftIcon={busy ? undefined : <LockSimple size={16} weight="bold" />}>
+              {payState === "verifying" ? "Confirming payment…" : `Pay ${formatInr(selected.priceInr)}`}
             </Button>
-            <span className="text-center text-[11.5px] font-medium text-charcoal-400 sm:text-right">
-              Online payments are launching soon
+            <span className="inline-flex items-center justify-center gap-1 text-[11.5px] font-medium text-charcoal-400 sm:justify-end">
+              <ShieldCheck size={13} weight="fill" className="text-emerald-500" />
+              Secure payment by Razorpay · UPI, cards, netbanking
             </span>
           </div>
         </div>
       }
     >
+      {notice && (
+        <div
+          role="alert"
+          className={cn(
+            "mb-4 flex items-start gap-2.5 rounded-2xl px-4 py-3 text-[13px] leading-relaxed",
+            notice.tone === "error" ? "bg-red-50 text-red-700" : "bg-tangerine-50 text-charcoal-600",
+          )}
+        >
+          <WarningCircle size={18} weight="fill" className="mt-0.5 shrink-0" />
+          {notice.text}
+        </div>
+      )}
       <div role="radiogroup" aria-label="Credit packs" className="grid grid-cols-2 gap-3 pt-2 md:grid-cols-4">
         {CREDIT_PACKS.map((pack) => (
           <PackCard
             key={pack.id}
             pack={pack}
             selected={pack.id === selectedId}
-            onSelect={() => setSelectedId(pack.id)}
+            onSelect={() => !busy && setSelectedId(pack.id)}
           />
         ))}
       </div>
@@ -150,6 +241,7 @@ const BuyCreditsModal = () => {
       <ul className="mt-4 space-y-1.5 text-[12.5px] text-charcoal-500">
         {[
           "Credits are added to your balance as soon as payment completes",
+          "Purchased credits never expire",
           "Unlocked profiles and contacts stay unlocked",
           "Missing contacts are never charged",
         ].map((t) => (

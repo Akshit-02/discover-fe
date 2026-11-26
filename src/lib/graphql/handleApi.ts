@@ -4,6 +4,8 @@ import {
   ContactReveal,
   CreatorProfile,
   CreditBalance,
+  CreditOrder,
+  CreditPurchaseResult,
   Creator,
   CreatorConnection,
   CreatorFilterOptions,
@@ -23,6 +25,8 @@ import {
   listCreatorsInList,
   listMyLists,
   listMySupportMessages,
+  createCreditOrder,
+  verifyCreditPayment,
   submitSupportMessage,
   myCredits,
   openCreatorProfile,
@@ -117,6 +121,13 @@ export const listMySupportMessagesAPI = async () =>
 
 export const submitSupportMessageAPI = async (input: SupportMessageInput) =>
   (await run<{ submitSupportMessage: SupportMessage }>(submitSupportMessage, { input })).submitSupportMessage;
+
+export const createCreditOrderAPI = async (packId: string) =>
+  (await run<{ createCreditOrder: CreditOrder }>(createCreditOrder, { packId })).createCreditOrder;
+
+export const verifyCreditPaymentAPI = async (orderId: string, paymentId: string, signature: string) =>
+  (await run<{ verifyCreditPayment: CreditPurchaseResult }>(verifyCreditPayment, { orderId, paymentId, signature }))
+    .verifyCreditPayment;
 
 export const updateMyProfileAPI = async (input: ProfileInput) =>
   (await run<{ updateMyProfile: User }>(updateMyProfile, { input })).updateMyProfile;

@@ -21,7 +21,7 @@ const OutOfCredits = ({
   const { balance, expired } = useAppSelector((s) => s.credits);
   const text =
     description ??
-    (expired
+    (expired && !balance
       ? "Your free credits have expired. Buy a credit pack to keep going."
       : `You have ${creditLabel(balance)} left, which isn't enough for this. Buy a credit pack to keep going.`);
 

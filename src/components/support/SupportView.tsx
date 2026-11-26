@@ -85,7 +85,7 @@ const FAQS = [
   },
   {
     q: "How do I get more credits?",
-    a: "Use \"Buy more credits\" from the credits menu in the top bar to see the available packs. Online payments are launching soon. Until then, email us if you need more credits.",
+    a: "Use \"Buy more credits\" from the credits menu in the top bar, pick a pack and pay securely with UPI, card or netbanking via Razorpay. Credits are added straight away, and purchased credits never expire.",
   },
 ];
 
