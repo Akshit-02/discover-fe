@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700" font-family="Inter, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t">
+<title id="t">Fifteen influencer marketing KPIs grouped into four stages: visibility (reach, impressions, video views, average views), engagement (engagement rate, likes, comments, shares, saves), traffic (link clicks, click-through rate, website sessions) and business outcomes (conversions, cost per engagement, return on investment)</title>
+<rect width="1600" height="700" fill="#FFF7F1"/>
+<text x="80" y="100" font-size="34" font-weight="700" fill="#202124">Influencer marketing KPIs</text>
+<text x="80" y="144" font-size="20" fill="#202124" opacity=".65">15 metrics, from who saw it to what it earned. Pick one or two per objective.</text>
+<g fill="#202124" font-size="19">
+<rect x="80" y="190" width="335" height="440" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="80" y="190" width="335" height="56" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="104" y="226" font-size="20" font-weight="700">1 VISIBILITY</text>
+<text x="104" y="290">Reach</text>
+<text x="104" y="334">Impressions</text>
+<text x="104" y="378">Video views</text>
+<text x="104" y="422">Average views</text>
+<text x="104" y="590" font-size="16" opacity=".7">Source: creator Insights</text>
+<rect x="448" y="190" width="335" height="440" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="448" y="190" width="335" height="56" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="472" y="226" font-size="20" font-weight="700">2 ENGAGEMENT</text>
+<text x="472" y="290">Engagement rate</text>
+<text x="472" y="334">Likes</text>
+<text x="472" y="378">Comments</text>
+<text x="472" y="422">Shares</text>
+<text x="472" y="466">Saves</text>
+<text x="472" y="590" font-size="16" opacity=".7">Source: Insights, public counts</text>
+<rect x="816" y="190" width="335" height="440" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="816" y="190" width="335" height="56" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="840" y="226" font-size="20" font-weight="700">3 TRAFFIC</text>
+<text x="840" y="290">Link clicks</text>
+<text x="840" y="334">Click-through rate</text>
+<text x="840" y="378">Website sessions</text>
+<text x="840" y="590" font-size="16" opacity=".7">Source: links, UTMs, analytics</text>
+<rect x="1184" y="190" width="336" height="440" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="1184" y="190" width="336" height="56" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="1208" y="226" font-size="20" font-weight="700">4 OUTCOMES</text>
+<text x="1208" y="290">Conversions</text>
+<text x="1208" y="334">Cost per engagement</text>
+<text x="1208" y="378">Return on investment</text>
+<text x="1208" y="590" font-size="16" opacity=".7">Source: store data, your costs</text>
+</g>
+<g stroke="#202124" stroke-width="3" fill="none"><path d="M418 410 l26 0 m-10 -9 l10 9 l-10 9"/><path d="M786 410 l26 0 m-10 -9 l10 9 l-10 9"/><path d="M1154 410 l26 0 m-10 -9 l10 9 l-10 9"/></g>
+<text x="80" y="676" font-size="16" fill="#202124" opacity=".65">discover.kudozz.in</text>
+</svg>

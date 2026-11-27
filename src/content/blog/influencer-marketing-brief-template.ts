@@ -11,7 +11,7 @@ export const influencerBriefTemplate: BlogPost = {
       "A copy-ready influencer marketing brief template for Indian brands, with a filled-in D2C skincare sample, the 17 elements to include and the mistakes to avoid.",
     author: { name: "Kudozz Strategy Team", url: "https://www.kudozz.in/about" },
     publishedAt: "2026-11-26",
-    readingTime: "12 min read",
+    readingTime: "16 min read",
     primaryKeyword: "influencer marketing brief template",
     keywords: ["influencer marketing brief template", "influencer campaign brief", "influencer collaboration brief", "influencer marketing campaign template", "influencer brief example", "brand influencer brief", "influencer campaign requirements", "creator collaboration brief"],
     hero: {

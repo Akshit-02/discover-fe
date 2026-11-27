@@ -24,7 +24,10 @@ export type BlogBlock =
 
 export type BlogFaq = { question: string; answer: string };
 
-export type BlogCategory = "Creator Discovery" | "Campaign Planning";
+export type BlogCategory = "Creator Discovery" | "Campaign Planning" | "Outreach & Partnerships" | "Measurement";
+
+/** Display order of categories on the blog index. */
+export const BLOG_CATEGORIES: BlogCategory[] = ["Creator Discovery", "Campaign Planning", "Outreach & Partnerships", "Measurement"];
 
 export type BlogPost = {
   slug: string;
@@ -47,6 +50,8 @@ export type BlogPost = {
   hero: { src: string; alt: string; width: number; height: number };
   body: BlogBlock[];
   faqs: BlogFaq[];
+  /** Hand-picked slugs of other posts on this blog, shown under "More guides". */
+  related?: string[];
   /** End-of-article CTA copy. */
   endCta: { headline: string; body: string; ctaLabel: string };
 };

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700" font-family="Inter, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t">
+<title id="t">A product launch influencer plan in four phases from T-8 weeks to T+4 weeks: plan and shortlist, seed and brief, launch week, and measure and report</title>
+<rect width="1600" height="700" fill="#FFF7F1"/>
+<text x="80" y="100" font-size="34" font-weight="700" fill="#202124">Finding influencers for a product launch</text>
+<text x="80" y="144" font-size="20" fill="#202124" opacity=".65">Work backwards from launch day (T): eleven steps in four phases.</text>
+<line x1="80" y1="214" x2="1520" y2="214" stroke="#202124" stroke-width="3"/>
+<g font-size="18" font-weight="700" fill="#202124" text-anchor="middle">
+<circle cx="260" cy="214" r="10" fill="#FFFFFF" stroke="#202124" stroke-width="3"/><text x="260" y="196">T-8 to T-5</text>
+<circle cx="620" cy="214" r="10" fill="#FFFFFF" stroke="#202124" stroke-width="3"/><text x="620" y="196">T-4 to T-1</text>
+<circle cx="980" cy="214" r="14" fill="#F36B4A" stroke="#202124" stroke-width="3"/><text x="980" y="192">T: launch week</text>
+<circle cx="1340" cy="214" r="10" fill="#FFFFFF" stroke="#202124" stroke-width="3"/><text x="1340" y="196">T+1 to T+4</text>
+</g>
+<g fill="#202124" font-size="20">
+<rect x="100" y="250" width="320" height="370" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="100" y="250" width="320" height="52" fill="#FFF7F1" stroke="#202124" stroke-width="3"/>
+<text x="120" y="284" font-weight="700">1 Plan and shortlist</text>
+<text x="120" y="340" font-size="17" opacity=".8">· One launch objective</text>
+<text x="120" y="374" font-size="17" opacity=".8">· Target buyer and cities</text>
+<text x="120" y="408" font-size="17" opacity=".8">· Core + adjacent niches</text>
+<text x="120" y="442" font-size="17" opacity=".8">· Nano, micro, larger mix</text>
+<text x="120" y="476" font-size="17" opacity=".8">· Long list of 30-50</text>
+<text x="120" y="510" font-size="17" opacity=".8">· Shortlist + backups</text>
+<rect x="460" y="250" width="320" height="370" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="460" y="250" width="320" height="52" fill="#FFF7F1" stroke="#202124" stroke-width="3"/>
+<text x="480" y="284" font-weight="700">2 Seed and brief</text>
+<text x="480" y="340" font-size="17" opacity=".8">· Paid deals confirmed</text>
+<text x="480" y="374" font-size="17" opacity=".8">· Seeding under embargo</text>
+<text x="480" y="408" font-size="17" opacity=".8">· Disclosure in writing</text>
+<text x="480" y="442" font-size="17" opacity=".8">· Briefs per creator role</text>
+<text x="480" y="476" font-size="17" opacity=".8">· Links and codes issued</text>
+<text x="480" y="510" font-size="17" opacity=".8">· Drafts approved</text>
+<rect x="820" y="250" width="320" height="370" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="820" y="250" width="320" height="52" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="840" y="284" font-weight="700">3 Launch week</text>
+<text x="840" y="340" font-size="17" opacity=".8">· Embargo lifts</text>
+<text x="840" y="374" font-size="17" opacity=".8">· Paid posts in slots</text>
+<text x="840" y="408" font-size="17" opacity=".8">· Seeded creators post</text>
+<text x="840" y="442" font-size="17" opacity=".8">· Stock checked by city</text>
+<text x="840" y="476" font-size="17" opacity=".8">· Comments answered</text>
+<text x="840" y="510" font-size="17" opacity=".8">· Backups on standby</text>
+<rect x="1180" y="250" width="320" height="370" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="1180" y="250" width="320" height="52" fill="#FFF7F1" stroke="#202124" stroke-width="3"/>
+<text x="1200" y="284" font-weight="700">4 Measure and report</text>
+<text x="1200" y="340" font-size="17" opacity=".8">· Reach and engagement</text>
+<text x="1200" y="374" font-size="17" opacity=".8">· Traffic by UTM link</text>
+<text x="1200" y="408" font-size="17" opacity=".8">· Orders and codes</text>
+<text x="1200" y="442" font-size="17" opacity=".8">· Boost best content</text>
+<text x="1200" y="476" font-size="17" opacity=".8">· Report vs objective</text>
+<text x="1200" y="510" font-size="17" opacity=".8">· Keep the best creators</text>
+</g>
+<text x="80" y="676" font-size="16" fill="#202124" opacity=".65">discover.kudozz.in</text>
+</svg>

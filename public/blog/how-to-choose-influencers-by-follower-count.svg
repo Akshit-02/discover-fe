@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700" font-family="Inter, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t">
+<title id="t">Comparing creators of different sizes: follower count is only the starting point, then check median views, engagement, niche fit and consistency, and divide the quoted fee by expected views to get cost per 1,000 views</title>
+<rect width="1600" height="700" fill="#FFF7F1"/>
+<text x="80" y="100" font-size="34" font-weight="700" fill="#202124">Choosing creators of different sizes</text>
+<text x="80" y="144" font-size="20" fill="#202124" opacity=".65">Followers are the starting point. Compare on ratios, fit and cost per 1,000 views.</text>
+<g fill="#202124">
+<rect x="80" y="196" width="250" height="300" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="104" y="240" font-size="22" font-weight="700">Followers</text>
+<text x="104" y="276" font-size="16">Nano · Micro</text>
+<text x="104" y="300" font-size="16">Macro · Mega</text>
+<text x="104" y="344" font-size="16">Tier cutoffs vary</text>
+<text x="104" y="368" font-size="16">by source: no</text>
+<text x="104" y="392" font-size="16">official definition</text>
+<path d="M342 346h34" stroke="#202124" stroke-width="3"/>
+<path d="M372 336l12 10-12 10z"/>
+<rect x="396" y="196" width="760" height="300" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<text x="420" y="240" font-size="22" font-weight="700">Then check what the audience does</text>
+<rect x="420" y="264" width="350" height="96" fill="#FFF7F1" stroke="#202124" stroke-width="2"/>
+<text x="440" y="298" font-size="18" font-weight="700">1 Median views</text>
+<text x="440" y="328" font-size="16" opacity=".75">Views ÷ followers ratio</text>
+<rect x="782" y="264" width="350" height="96" fill="#FFF7F1" stroke="#202124" stroke-width="2"/>
+<text x="802" y="298" font-size="18" font-weight="700">2 Engagement quality</text>
+<text x="802" y="328" font-size="16" opacity=".75">(Likes + comments) ÷ followers</text>
+<rect x="420" y="376" width="350" height="96" fill="#FFF7F1" stroke="#202124" stroke-width="2"/>
+<text x="440" y="410" font-size="18" font-weight="700">3 Audience fit</text>
+<text x="440" y="440" font-size="16" opacity=".75">Niche, city, language</text>
+<rect x="782" y="376" width="350" height="96" fill="#FFF7F1" stroke="#202124" stroke-width="2"/>
+<text x="802" y="410" font-size="18" font-weight="700">4 Consistency</text>
+<text x="802" y="440" font-size="16" opacity=".75">Posts per month, steady views</text>
+<path d="M1168 346h34" stroke="#202124" stroke-width="3"/>
+<path d="M1198 336l12 10-12 10z"/>
+<rect x="1222" y="196" width="298" height="300" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<text x="1246" y="240" font-size="22" font-weight="700">Cost per 1,000</text>
+<text x="1246" y="268" font-size="22" font-weight="700">views</text>
+<text x="1246" y="312" font-size="16" opacity=".75">Quoted fee ÷ median</text>
+<text x="1246" y="336" font-size="16" opacity=".75">views × 1,000</text>
+<text x="1246" y="380" font-size="16" opacity=".75">Same scope for</text>
+<text x="1246" y="404" font-size="16" opacity=".75">every quote</text>
+<rect x="80" y="526" width="712" height="96" fill="#FFFFFF" stroke="#202124" stroke-width="2"/>
+<text x="104" y="564" font-size="18" font-weight="700">Awareness: weight views and cost per 1,000 views</text>
+<text x="104" y="596" font-size="16" opacity=".75">Larger accounts with steady views often lead here</text>
+<rect x="808" y="526" width="712" height="96" fill="#FFFFFF" stroke="#202124" stroke-width="2"/>
+<text x="832" y="564" font-size="18" font-weight="700">Sales: weight niche fit and buying-intent comments</text>
+<text x="832" y="596" font-size="16" opacity=".75">Focused nano and micro creators often lead here</text>
+</g>
+<text x="80" y="676" font-size="16" fill="#202124" opacity=".65">discover.kudozz.in</text>
+</svg>

@@ -50,13 +50,33 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
+const TocList = ({ toc }: { toc: { id: string; text: string }[] }) => (
+  <ol className="mt-3 space-y-2 text-[14px] leading-snug">
+    {toc.map((h) => (
+      <li key={h.id}>
+        <a href={`#${h.id}`} className="text-charcoal-600 hover:text-coral-700">
+          {h.text}
+        </a>
+      </li>
+    ))}
+    <li>
+      <a href="#faqs" className="text-charcoal-600 hover:text-coral-700">
+        FAQs
+      </a>
+    </li>
+  </ol>
+);
+
 export default function BlogPostPage({ params }: Props) {
   const post = getPost(params.slug);
   if (!post) notFound();
 
   const url = `${SITE_URL}/blog/${post.slug}`;
   const toc = post.body.filter((b): b is Extract<typeof b, { type: "heading" }> => b.type === "heading");
-  const others = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const picked = (post.related ?? []).map(getPost).filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const fill = blogPosts.filter((p) => p.slug !== post.slug && p.category === post.category && !picked.includes(p));
+  const rest = blogPosts.filter((p) => p.slug !== post.slug && !picked.includes(p) && !fill.includes(p));
+  const others = [...picked, ...fill, ...rest].slice(0, 4);
   const orgId = `${PARENT_SITE_URL}/#organization`;
 
   const jsonLd = {
@@ -155,24 +175,19 @@ export default function BlogPostPage({ params }: Props) {
           />
 
           <div className="mt-10 grid gap-10 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-14">
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              <details className="group rounded-2xl border border-sand-200 bg-white p-4 lg:border-0 lg:bg-transparent lg:p-0" open>
-                <summary className="cursor-pointer list-none text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400 lg:cursor-default">
+            <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto">
+              {/* Collapsed on mobile so the article starts near the top; always open in the desktop sidebar. */}
+              <details className="group rounded-2xl border border-sand-200 bg-white p-4 lg:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-500">
                   On this page
+                  <span aria-hidden className="text-[16px] transition-transform group-open:rotate-45">+</span>
                 </summary>
-                <ol className="mt-3 space-y-2 text-[14px] leading-snug">
-                  {toc.map((h) => (
-                    <li key={h.id}>
-                      <a href={`#${h.id}`} className="text-charcoal-600 hover:text-coral-700">
-                        {h.text}
-                      </a>
-                    </li>
-                  ))}
-                  <li>
-                    <a href="#faqs" className="text-charcoal-600 hover:text-coral-700">FAQs</a>
-                  </li>
-                </ol>
+                <TocList toc={toc} />
               </details>
+              <nav aria-label="On this page" className="hidden lg:block">
+                <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-charcoal-400">On this page</p>
+                <TocList toc={toc} />
+              </nav>
             </aside>
 
             <div className="min-w-0 max-w-[760px]">

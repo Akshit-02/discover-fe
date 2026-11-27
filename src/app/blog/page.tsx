@@ -4,7 +4,7 @@ import Link from "next/link";
 import LandingFooter from "@/components/landing/LandingFooter";
 import LandingNav from "@/components/landing/LandingNav";
 import { APP_NAME, SITE_URL } from "@/config/brand";
-import { BLOG_META, blogPosts } from "@/content/blog";
+import { BLOG_CATEGORIES, BLOG_META, blogPosts } from "@/content/blog";
 
 const url = `${SITE_URL}/blog`;
 
@@ -61,28 +61,39 @@ export default function BlogIndexPage() {
           <p className="mt-4 text-[17px] leading-relaxed text-charcoal-500">{BLOG_META.description}</p>
         </header>
 
-        <ul className="mt-12 grid gap-6 md:grid-cols-2">
-          {blogPosts.map((p) => (
-            <li key={p.slug}>
-              <Link
-                href={`/blog/${p.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand-200 bg-white transition hover:border-coral-200 hover:shadow-lift"
-              >
-                <Image src={p.hero.src} alt="" width={p.hero.width} height={p.hero.height} unoptimized className="h-auto w-full border-b border-sand-200" />
-                <div className="flex flex-1 flex-col p-6">
-                  <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-coral-700">{p.category}</p>
-                  <h2 className="mt-2 font-display text-[24px] font-medium leading-tight tracking-[-0.01em] group-hover:text-coral-700">
-                    {p.title}
-                  </h2>
-                  <p className="mt-3 flex-1 text-[15.5px] leading-relaxed text-charcoal-500">{p.excerpt}</p>
-                  <p className="mt-4 text-[13.5px] text-charcoal-400">
-                    <time dateTime={p.publishedAt}>{formatDate(p.publishedAt)}</time> · {p.readingTime}
-                  </p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {BLOG_CATEGORIES.map((category) => {
+          const posts = blogPosts.filter((p) => p.category === category);
+          if (posts.length === 0) return null;
+          const id = category.toLowerCase().replace(/[^a-z]+/g, "-");
+          return (
+            <section key={category} aria-labelledby={id} className="mt-14">
+              <h2 id={id} className="font-display text-[26px] font-medium tracking-[-0.01em] sm:text-[30px]">
+                {category}
+              </h2>
+              <ul className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {posts.map((p) => (
+                  <li key={p.slug}>
+                    <Link
+                      href={`/blog/${p.slug}`}
+                      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-sand-200 bg-white transition hover:border-coral-200 hover:shadow-lift"
+                    >
+                      <Image src={p.hero.src} alt="" width={p.hero.width} height={p.hero.height} unoptimized className="h-auto w-full border-b border-sand-200" />
+                      <div className="flex flex-1 flex-col p-6">
+                        <h3 className="font-display text-[21px] font-medium leading-tight tracking-[-0.01em] group-hover:text-coral-700">
+                          {p.title}
+                        </h3>
+                        <p className="mt-3 line-clamp-3 flex-1 text-[15px] leading-relaxed text-charcoal-500">{p.excerpt}</p>
+                        <p className="mt-4 text-[13.5px] text-charcoal-400">
+                          <time dateTime={p.publishedAt}>{formatDate(p.publishedAt)}</time> · {p.readingTime}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })}
       </main>
       <LandingFooter />
     </div>

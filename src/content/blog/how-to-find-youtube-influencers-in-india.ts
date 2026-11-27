@@ -11,7 +11,7 @@ export const youtubeInfluencersIndia: BlogPost = {
       "Find YouTube influencers in India: search like a buyer, find regional channels, judge recent views and comments, spot red flags and use a shortlist checklist.",
     author: { name: "Kudozz Strategy Team", url: "https://www.kudozz.in/about" },
     publishedAt: "2026-11-26",
-    readingTime: "13 min read",
+    readingTime: "15 min read",
     primaryKeyword: "YouTube influencers in India",
     keywords: ["YouTube influencers in India", "find YouTube influencers", "YouTube influencer marketing India", "Indian YouTube creators", "YouTube influencer database", "YouTube creators for brands", "YouTube influencers by niche", "YouTube micro influencers", "YouTube channel discovery"],
     hero: {

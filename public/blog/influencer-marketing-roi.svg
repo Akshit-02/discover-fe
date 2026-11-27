@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" width="1600" height="700" font-family="Inter, Helvetica, Arial, sans-serif" role="img" aria-labelledby="t">
+<title id="t">Influencer marketing ROI worked out in four steps: add up every campaign cost, attribute revenue with UTM links and discount codes, convert delivered revenue into contribution margin, then divide profit by cost</title>
+<rect width="1600" height="700" fill="#FFF7F1"/>
+<text x="80" y="100" font-size="34" font-weight="700" fill="#202124">Influencer marketing ROI, step by step</text>
+<text x="80" y="144" font-size="20" fill="#202124" opacity=".65">Count every cost, attribute delivered sales, and measure profit, not revenue.</text>
+<g fill="#202124" font-size="20">
+<rect x="80" y="190" width="320" height="250" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="80" y="190" width="320" height="52" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="102" y="224" font-weight="700">1 Total cost</text>
+<text x="102" y="282" font-size="16" opacity=".75">Creator fees</text>
+<text x="102" y="310" font-size="16" opacity=".75">Product + shipping</text>
+<text x="102" y="338" font-size="16" opacity=".75">Agency, tools, team time</text>
+<text x="102" y="366" font-size="16" opacity=".75">Boosted / partnership ads</text>
+<text x="102" y="394" font-size="16" opacity=".75">Discounts (count once)</text>
+<rect x="440" y="190" width="320" height="250" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="440" y="190" width="320" height="52" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="462" y="224" font-weight="700">2 Attribute sales</text>
+<text x="462" y="282" font-size="16" opacity=".75">UTM link per creator</text>
+<text x="462" y="310" font-size="16" opacity=".75">Unique discount code</text>
+<text x="462" y="338" font-size="16" opacity=".75">Check coupon-site leaks</text>
+<text x="462" y="366" font-size="16" opacity=".75">Same window for all</text>
+<text x="462" y="394" font-size="16" opacity=".75">Marketplace: vs baseline</text>
+<rect x="800" y="190" width="320" height="250" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="800" y="190" width="320" height="52" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="822" y="224" font-weight="700">3 Margin, not revenue</text>
+<text x="822" y="282" font-size="16" opacity=".75">Delivered orders only</text>
+<text x="822" y="310" font-size="16" opacity=".75">Minus COD refusals (RTO)</text>
+<text x="822" y="338" font-size="16" opacity=".75">and returns</text>
+<text x="822" y="366" font-size="16" opacity=".75">Minus product, shipping,</text>
+<text x="822" y="394" font-size="16" opacity=".75">payment fees</text>
+<rect x="1160" y="190" width="360" height="250" fill="#FFFFFF" stroke="#202124" stroke-width="3"/>
+<rect x="1160" y="190" width="360" height="52" fill="#F36B4A" stroke="#202124" stroke-width="3"/>
+<text x="1182" y="224" font-weight="700">4 Calculate</text>
+<text x="1182" y="282" font-size="17" font-weight="700">ROI = (Margin − Cost)</text>
+<text x="1182" y="308" font-size="17" font-weight="700">÷ Cost × 100</text>
+<text x="1182" y="346" font-size="16" opacity=".75">ROAS = Revenue ÷ Cost</text>
+<text x="1182" y="374" font-size="16" opacity=".75">CPA = Cost ÷ Orders</text>
+<text x="1182" y="402" font-size="16" opacity=".75">CPM = Cost ÷ Views × 1,000</text>
+</g>
+<g stroke="#202124" stroke-width="3" fill="none">
+<path d="M404 315h30m-10-8 10 8-10 8"/>
+<path d="M764 315h30m-10-8 10 8-10 8"/>
+<path d="M1124 315h30m-10-8 10 8-10 8"/>
+</g>
+<rect x="80" y="476" width="1440" height="150" fill="#FFFFFF" stroke="#202124" stroke-width="2"/>
+<text x="104" y="512" font-size="20" font-weight="700" fill="#202124">Hypothetical example: Jaipur home decor brand, 6 creators, unique 15% codes</text>
+<text x="104" y="550" font-size="17" fill="#202124" opacity=".8">Total cost ₹1,27,000 · 194 delivered orders · Net revenue ₹3,95,760 · Contribution ₹1,70,700</text>
+<text x="104" y="590" font-size="18" font-weight="700" fill="#F36B4A">ROAS 3.1x · ROI 34% · CPA about ₹655 (gross-revenue "ROI" would wrongly show 316%)</text>
+<text x="80" y="676" font-size="16" fill="#202124" opacity=".65">discover.kudozz.in</text>
+</svg>
